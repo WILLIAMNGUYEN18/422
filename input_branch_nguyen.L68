@@ -1,0 +1,128 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 4/14/2019 6:59:36 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9  
+00001000                            10  * Put program code here
+00001000                            11  *-------Code for output-------
+00001000  43F9 000010C4             12  LOOP    LEA     MESSAGE,A1     
+00001006  103C 000E                 13          MOVE.B  #14,D0          
+0000100A  4E4F                      14          TRAP    #15       
+0000100C                            15  
+0000100C                            16  *-------Code for input-------
+0000100C  103C 0004                 17          MOVE.B  #4,D0           Trap task 4 does the following:
+00001010  4E4F                      18          TRAP    #15             Read a number from the keyboard into D1.
+00001012  B2BC 001788DE             19          CMP.L   #1542366,D1     Compares D1 to the studentid
+00001018  6700 00A4                 20          BEQ     DONE            Branch to DONE if they are equal
+0000101C                            21          
+0000101C  B23C 0014                 22          CMP.B   #20,D1           Compares D1 to 20
+00001020  6D00 008C                 23          BLT     INVALID         BLT branches if D1 is less than 20
+00001024  B23C 0019                 24          CMP.B   #25,D1           Compares D1 to 25
+00001028  6E00 0084                 25          BGT     INVALID         BGT branches if D1 is greater than 25
+0000102C                            26  
+0000102C  B23C 0014                 27          CMP.B   #20,D1          Compares D1 and 20
+00001030  6600 0010                 28          BNE     TWO             BEQ branches if D1 and 20 are not equal
+00001034  43F9 00001123             29          LEA     DISPONE,A1      
+0000103A  103C 000E                 30          MOVE.B  #14,D0  
+0000103E  4E4F                      31          TRAP    #15
+00001040  60BE                      32          BRA     LOOP
+00001042                            33          
+00001042  B23C 0015                 34  TWO     CMP.B   #21,D1           Compares D1 and 2
+00001046  6600 0010                 35          BNE     THREE           BEQ branches if D1 and 2 are not equal
+0000104A  43F9 00001138             36          LEA     DISPTWO,A1      
+00001050  103C 000E                 37          MOVE.B  #14,D0  
+00001054  4E4F                      38          TRAP    #15
+00001056  60A8                      39          BRA     LOOP
+00001058                            40  
+00001058  B23C 0016                 41  THREE   CMP.B   #22,D1           Compares D1 and 3
+0000105C  6600 0010                 42          BNE     FOUR            BEQ branches if D1 and 3 are not equal
+00001060  43F9 0000114D             43          LEA     DISPTHR,A1      
+00001066  103C 000E                 44          MOVE.B  #14,D0  
+0000106A  4E4F                      45          TRAP    #15
+0000106C  6092                      46          BRA     LOOP
+0000106E                            47  
+0000106E  B23C 0017                 48  FOUR    CMP.B   #23,D1           Compares D1 and 4
+00001072  6600 0012                 49          BNE     FIVE
+00001076  43F9 00001162             50          LEA     DISPFOU,A1      
+0000107C  103C 000E                 51          MOVE.B  #14,D0  
+00001080  4E4F                      52          TRAP    #15
+00001082  6000 FF7C                 53          BRA     LOOP
+00001086                            54  
+00001086  B23C 0018                 55  FIVE    CMP.B   #24,D1           Compares D1 and 2
+0000108A  6600 0012                 56          BNE     SIX             BEQ branches if D1 and 2 are not equal
+0000108E  43F9 00001177             57          LEA     DISPFIV,A1      
+00001094  103C 000E                 58          MOVE.B  #14,D0  
+00001098  4E4F                      59          TRAP    #15
+0000109A  6000 FF64                 60          BRA     LOOP
+0000109E                            61  
+0000109E  43F9 0000118C             62  SIX     LEA     DISPSIX,A1      
+000010A4  103C 000E                 63          MOVE.B  #14,D0  
+000010A8  4E4F                      64          TRAP    #15
+000010AA  6000 FF54                 65          BRA     LOOP
+000010AE                            66  
+000010AE                            67    
+000010AE                            68  
+000010AE  43F9 00001103             69  INVALID LEA     INV,A1
+000010B4  103C 000E                 70          MOVE.B  #14,D0  
+000010B8  4E4F                      71          TRAP    #15
+000010BA  6000 FF44                 72          BRA     LOOP
+000010BE                            73          
+000010BE  103C 0009                 74  DONE    MOVE.B  #9,D0
+000010C2  4E4F                      75          TRAP    #15             Halt Simulator        
+000010C4                            76  
+000010C4  =0000000D                 77  CR      EQU     $0D         
+000010C4  =0000000A                 78  LF      EQU     $0A 
+000010C4                            79          
+000010C4= 45 6E 74 65 72 20 ...     80  MESSAGE DC.B    'Enter a number between 20 and 25, Enter my studentid to exit: ',0        
+00001103                            81          
+00001103= 54 68 61 74 20 69 ...     82  INV     DC.B    'That is not between 20 and 25',CR,LF,0
+00001123                            83  
+00001123= 43 72 65 61 74 69 ...     84  DISPONE DC.B    'Creative Message 0',CR,LF,0
+00001138= 43 72 65 61 74 69 ...     85  DISPTWO DC.B    'Creative Message 1',CR,LF,0
+0000114D= 43 72 65 61 74 69 ...     86  DISPTHR DC.B    'Creative Message 2',CR,LF,0
+00001162= 43 72 65 61 74 69 ...     87  DISPFOU DC.B    'Creative Message 3',CR,LF,0
+00001177= 43 72 65 61 74 69 ...     88  DISPFIV DC.B    'Creative Message 4',CR,LF,0
+0000118C= 43 72 65 61 74 69 ...     89  DISPSIX DC.B    'Creative Message 5',CR,LF,0
+000011A1                            90  
+000011A1                            91  
+000011A1                            92  
+000011A2  FFFF FFFF                 93      SIMHALT             ; halt simulator
+000011A6                            94  
+000011A6                            95  * Put variables and constants here
+000011A6                            96  
+000011A6                            97      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CR                  D
+DISPFIV             1177
+DISPFOU             1162
+DISPONE             1123
+DISPSIX             118C
+DISPTHR             114D
+DISPTWO             1138
+DONE                10BE
+FIVE                1086
+FOUR                106E
+INV                 1103
+INVALID             10AE
+LF                  A
+LOOP                1000
+MESSAGE             10C4
+SIX                 109E
+START               1000
+THREE               1058
+TWO                 1042
