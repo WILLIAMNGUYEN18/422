@@ -1,0 +1,78 @@
+00000400 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 4/17/2019 11:35:06 AM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :HW1Q4
+00000000                             3  * Written by :UWB
+00000000                             4  * Date       :4/17/19
+00000000                             5  * Description:Analysis of Code
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  
+00000000                             8  *  Beginning of EQUates section, just like #define in C
+00000000  =00004000                  9  addr1     EQU     $4000        
+00000000                            10  
+00000000  =00004001                 11  addr2     EQU     $4001 
+00000000                            12  
+00000000  =0000A7FF                 13  data2     EQU     $A7FF 
+00000000                            14  
+00000000  =00005555                 15  data3     EQU     $5555 
+00000000                            16  
+00000000  =00000000                 17  data4     EQU     $0000 
+00000000                            18  
+00000000  =00001246                 19  data5     EQU     4678 
+00000000                            20  
+00000000  =0000004F                 21  data6     EQU     %01001111 
+00000000                            22  
+00000000  =00000017                 23  data7     EQU     %00010111 
+00000000                            24  
+00000000                            25  
+00000000                            26  * Beginning of code segment. This is the actual assembly language instructions.
+00000000                            27  
+00000400                            28          ORG    $400
+00000400  303C A7FF                 29  start    MOVE.W    #data2,D0     * Load D0 
+00000404                            30  
+00000404  123C 004F                 31           MOVE.B    #data6,D1     * Load D1 
+00000408                            32  
+00000408  143C 0017                 33           MOVE.B    #data7,D2     * load D2 
+0000040C                            34  
+0000040C  363C 5555                 35           MOVE.W    #data3,D3     * load D3 
+00000410                            36  
+00000410  307C 4000                 37           MOVEA.W   #addr1,A0     * load address register 
+00000414                            38  
+00000414  10C1                      39           MOVE.B    D1,(A0)+      * transfer byte to memory 
+00000416                            40  
+00000416  10C2                      41           MOVE.B    D2,(A0)+      * transfer second byte
+00000418                            42  
+00000418  327C 4000                 43           MOVEA.W   #addr1,A1     * load address 
+0000041C                            44  
+0000041C  C751                      45           AND.W     D3,(A1)       * Logical AND
+0000041E                            46  
+0000041E                            47   
+0000041E                            48  
+0000041E                            49  * The next instruction shows how a label is used
+0000041E                            50  
+0000041E                            51   
+0000041E                            52  
+0000041E  4EF8 0400                 53          JMP        start        * This instruction keeps the program
+00000422                            54  
+00000422                            55                                        * looping forever
+00000422                            56  
+00000422                            57          END   $400           * This pseudo op-code tells the assembler 
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ADDR1               4000
+ADDR2               4001
+DATA2               A7FF
+DATA3               5555
+DATA4               0
+DATA5               1246
+DATA6               4F
+DATA7               17
+START               400
