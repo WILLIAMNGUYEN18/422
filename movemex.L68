@@ -1,0 +1,47 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 4/17/2019 7:04:04 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : inclass movem example    
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description: fill registers and move them to stack
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000  3E7C 0100                  9      MOVEA.W #$0100,A7
+00001004                            10      
+00001004  307C 0001                 11      MOVEA.W #$0001,A0
+00001008  327C 0002                 12      MOVEA.W #$0002,A1
+0000100C  347C 0003                 13      MOVEA.W #$0003,A2
+00001010  367C 0004                 14      MOVEA.W #$0004,A3
+00001014  387C 0005                 15      MOVEA.W #$0005,A4
+00001018  3A7C 0006                 16      MOVEA.W #$0006,A5
+0000101C  3C7C 0007                 17      MOVEA.W #$0007,A6
+00001020  700A                      18      MOVEQ #10,D0
+00001022  720B                      19      MOVEQ #11,D1
+00001024  740C                      20      MOVEQ #12,D2
+00001026  760D                      21      MOVEQ #13,D3
+00001028  780E                      22      MOVEQ #14,D4
+0000102A  7A0F                      23      MOVEQ #15,D5
+0000102C  7C10                      24      MOVEQ #16,D6
+0000102E  7E11                      25      MOVEQ #17,D7
+00001030                            26      
+00001030  48E7 FFFE                 27      MOVEM.L A0-A6/D0-D7, -(A7)
+00001034                            28      * Put program code here
+00001034                            29  
+00001034  FFFF FFFF                 30      SIMHALT             ; halt simulator
+00001038                            31  
+00001038                            32  * Put variables and constants here
+00001038                            33  
+00001038                            34      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+START               1000
