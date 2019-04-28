@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/27/2019 6:09:41 PM
+Created On: 4/27/2019 6:15:17 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Homework 1 Question 3
@@ -32,9 +32,9 @@ Created On: 4/27/2019 6:09:41 PM
 0000100C                            28      **if higher than top, check top for A-F
 0000100C                            29      
 0000100C                            30  CHECK0
-0000100C  0C39 001E 0000A000        31      CMP.B   #30,(INPUT1)           Compares D1 to 30
+0000100C  0C39 0030 0000A000        31      CMP.B   #$30,(INPUT1)           Compares D1 to 30
 00001014  6D00 0060                 32      BLT     INVALID         BLT branches if D1 is less than 30
-00001018  0C39 0028 0000A000        33      CMP.B   #40,(INPUT1)           Compares D1 to 40
+00001018  0C39 0039 0000A000        33      CMP.B   #$39,(INPUT1)           Compares D1 to 40
 00001020  6E00 0006                 34      BGT     CHECK1         BGT branches if D1 is greater than 39
 00001024  6000 0006                 35      BRA     SUBNUM0
 00001028                            36  
@@ -45,11 +45,11 @@ Created On: 4/27/2019 6:09:41 PM
 00001028  6000 000E                 41      BRA     SUBLET0          
 0000102C                            42  
 0000102C                            43  SUBNUM0
-0000102C  0439 001E 0000A000        44      SUBI.B  #30,INPUT1      Reduce to Binary equiv of 0-9
+0000102C  0439 0030 0000A000        44      SUBI.B  #$30,INPUT1      Reduce to Binary equiv of 0-9
 00001034  6000 000E                 45      BRA FOR
 00001038                            46  
 00001038                            47  SUBLET0
-00001038  0439 0028 0000A000        48      SUBI.B  #40,INPUT1      Reduce to Binary equiv of A-F
+00001038  0439 0037 0000A000        48      SUBI.B  #$37,INPUT1      Reduce to Binary equiv of A-F
 00001040  6000 0002                 49      BRA FOR
 00001044                            50  FOR   
 00001044                            51  * will need to use string or 

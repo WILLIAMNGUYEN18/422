@@ -28,9 +28,9 @@ START:                  ; first instruction of program
     **if higher than top, check top for A-F
     
 CHECK0
-    CMP.B   #30,(INPUT1)           Compares D1 to 30
+    CMP.B   #$30,(INPUT1)           Compares D1 to 30
     BLT     INVALID         BLT branches if D1 is less than 30
-    CMP.B   #40,(INPUT1)           Compares D1 to 40
+    CMP.B   #$39,(INPUT1)           Compares D1 to 40
     BGT     CHECK1         BGT branches if D1 is greater than 39
     BRA     SUBNUM0
 
@@ -41,11 +41,11 @@ CHECK1
     BRA     SUBLET0          
 
 SUBNUM0
-    SUBI.B  #30,INPUT1      Reduce to Binary equiv of 0-9
+    SUBI.B  #$30,INPUT1      Reduce to Binary equiv of 0-9
     BRA FOR
 
 SUBLET0
-    SUBI.B  #40,INPUT1      Reduce to Binary equiv of A-F
+    SUBI.B  #$37,INPUT1      Reduce to Binary equiv of A-F
     BRA FOR
 FOR   
 * will need to use string or 
