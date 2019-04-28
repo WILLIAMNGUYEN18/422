@@ -36,37 +36,46 @@ CHECK0
 
 
 CHECK1
-    *CMP.B   #47,(INPUT1)           Compares D1 to 47
-    *BGT     INVALID         BGT branches if D1 is greater than 46
+    CMP.B   #$47,(INPUT1)           Compares D1 to 47
+    BGT     INVALID         BGT branches if D1 is greater than 46
     BRA     SUBLET0          
 
 SUBNUM0
     SUBI.B  #$30,INPUT1      Reduce to Binary equiv of 0-9
-    BRA FOR
+    BRA STFOR
 
 SUBLET0
     SUBI.B  #$37,INPUT1      Reduce to Binary equiv of A-F
-    BRA FOR
-FOR   
-* will need to use string or 
-* single character input and convert to hex.
-* Put program code here
+    BRA STFOR
 
 
-* Assuming you want to convert each digit to 
-* an individual ASCII character you 
-* would proceed something like this:
+*byte data stored in memory between the addresses $6000 and $8000 
+*and compare it to the (byte) data at address $A000 
+*(hint: you can consider the memory between $6000 and $8000 an array).
 
-* If the digit is 0 through 9 add $30 to convert to ASCII.
-* If the digit is A through F add $37 to convert to ASCII.
+STFOR
+    MOVE.L  #1, D3
+    MOVE.L  #2000,D4
+    LEA     $6000,A0
+    
+LOOP    CMP.B   D3,D4
+        BEQ     NEXT
+        *Execute loop code below
+        *compare each byte address to $A000
+        CMP.B   
+        *If the same, store address into Addr1
+        BEQ     STORE
+        
+        
+        BRA     LOOP
 
-*If the digit is '0' through '9' subtract $30 
-*to convert to binary. This works because the 
-*ASCII code for '0' is $30. 
-*The ASCII code for '1' is $31 etc.
-*If the digit is 'A' through 'F' subtract 
-*$37 to convert to binary. Take a look at the 
-*ASCII codes for 'A' through 'F' to see why this works.
+*store address currently in A0 into Addr1
+STORE           
+
+*If no data matches 6000-8000
+*default to Addr1 = $6000
+NEXT       
+
 CR      EQU     $0D         
 LF      EQU     $0A 
 MESSAGE DC.B    'Enter a number: ',0
