@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/27/2019 5:13:32 PM
+Created On: 4/27/2019 6:09:41 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Homework 1 Question 3
@@ -21,46 +21,73 @@ Created On: 4/27/2019 5:13:32 PM
 00001000  103C 0005                 17      MOVE.B  #5,D0           *Trap # 5 in D0
 00001004  4E4F                      18      TRAP    #15             *Read a number from the keyboard into D1.L. 
 00001006  13C1 0000A000             19      MOVE.B  D1,$A000      
-0000100C  4E4F                      20      TRAP    #15
-0000100E  13C1 0000A001             21      MOVE.B  D1,$A001
-00001014                            22      
-00001014                            23      *Converting values at $A000 and $A000 (2 individual characters) to hex
-00001014                            24      
-00001014                            25      *check if $A000 and $A001 are between 41 and 46
-00001014                            26      
-00001014                            27      
-00001014                            28      
-00001014                            29      
-00001014                            30  
-00001014                            31  
-00001014                            32      
-00001014                            33  * will need to use string or 
-00001014                            34  * single character input and convert to hex.
-00001014                            35  * Put program code here
-00001014                            36  
-00001014                            37  
-00001014                            38  * Assuming you want to convert each digit to 
-00001014                            39  * an individual ASCII character you 
-00001014                            40  * would proceed something like this:
-00001014                            41  
-00001014                            42  * If the digit is 0 through 9 add $30 to convert to ASCII.
-00001014                            43  * If the digit is A through F add $37 to convert to ASCII.
-00001014                            44  
-00001014                            45  *If the digit is '0' through '9' subtract $30 
-00001014                            46  *to convert to binary. This works because the 
-00001014                            47  *ASCII code for '0' is $30. 
-00001014                            48  *The ASCII code for '1' is $31 etc.
-00001014                            49  *If the digit is 'A' through 'F' subtract 
-00001014                            50  *$37 to convert to binary. Take a look at the 
-00001014                            51  *ASCII codes for 'A' through 'F' to see why this works.
-00001014                            52  
-00001014  FFFF FFFF                 53      SIMHALT             ; halt simulator
-00001018                            54      
-00001018= 45 6E 74 65 72 20 ...     55  MESSAGE DC.B    'Enter a number: ',0
-00001029                            56  
-00001029                            57  * Put variables and constants here
-00001029                            58  
-00001029                            59      END    START        ; last line of source
+0000100C                            20      
+0000100C                            21      *Converting values at $A000 and $A000 (2 individual characters) to hex
+0000100C                            22      
+0000100C                            23      *check if $A000 and $A001 are 41 - 46
+0000100C                            24      
+0000100C                            25      *else, assuming proper input, they are 30 - 39
+0000100C                            26      
+0000100C                            27      **layer check. first for check bottom. then check top (0-9)
+0000100C                            28      **if higher than top, check top for A-F
+0000100C                            29      
+0000100C                            30  CHECK0
+0000100C  0C39 001E 0000A000        31      CMP.B   #30,(INPUT1)           Compares D1 to 30
+00001014  6D00 0060                 32      BLT     INVALID         BLT branches if D1 is less than 30
+00001018  0C39 0028 0000A000        33      CMP.B   #40,(INPUT1)           Compares D1 to 40
+00001020  6E00 0006                 34      BGT     CHECK1         BGT branches if D1 is greater than 39
+00001024  6000 0006                 35      BRA     SUBNUM0
+00001028                            36  
+00001028                            37  
+00001028                            38  CHECK1
+00001028                            39      *CMP.B   #47,(INPUT1)           Compares D1 to 47
+00001028                            40      *BGT     INVALID         BGT branches if D1 is greater than 46
+00001028  6000 000E                 41      BRA     SUBLET0          
+0000102C                            42  
+0000102C                            43  SUBNUM0
+0000102C  0439 001E 0000A000        44      SUBI.B  #30,INPUT1      Reduce to Binary equiv of 0-9
+00001034  6000 000E                 45      BRA FOR
+00001038                            46  
+00001038                            47  SUBLET0
+00001038  0439 0028 0000A000        48      SUBI.B  #40,INPUT1      Reduce to Binary equiv of A-F
+00001040  6000 0002                 49      BRA FOR
+00001044                            50  FOR   
+00001044                            51  * will need to use string or 
+00001044                            52  * single character input and convert to hex.
+00001044                            53  * Put program code here
+00001044                            54  
+00001044                            55  
+00001044                            56  * Assuming you want to convert each digit to 
+00001044                            57  * an individual ASCII character you 
+00001044                            58  * would proceed something like this:
+00001044                            59  
+00001044                            60  * If the digit is 0 through 9 add $30 to convert to ASCII.
+00001044                            61  * If the digit is A through F add $37 to convert to ASCII.
+00001044                            62  
+00001044                            63  *If the digit is '0' through '9' subtract $30 
+00001044                            64  *to convert to binary. This works because the 
+00001044                            65  *ASCII code for '0' is $30. 
+00001044                            66  *The ASCII code for '1' is $31 etc.
+00001044                            67  *If the digit is 'A' through 'F' subtract 
+00001044                            68  *$37 to convert to binary. Take a look at the 
+00001044                            69  *ASCII codes for 'A' through 'F' to see why this works.
+00001044  =0000000D                 70  CR      EQU     $0D         
+00001044  =0000000A                 71  LF      EQU     $0A 
+00001044= 45 6E 74 65 72 20 ...     72  MESSAGE DC.B    'Enter a number: ',0
+00001055= 54 68 61 74 20 69 ...     73  INV     DC.B    'That is not between 20 and 25',CR,LF,0
+00001076  43F8 1055                 74  INVALID LEA     INV,A1
+0000107A  103C 000E                 75          MOVE.B  #14,D0  
+0000107E  4E4F                      76          TRAP    #15
+00001080  6000 0002                 77          BRA     DONE
+00001084                            78          
+00001084  103C 0009                 79  DONE    MOVE.B  #9,D0
+00001088  4E4F                      80          TRAP    #15 
+0000108A                            81  
+0000108A  FFFF FFFF                 82      SIMHALT             ; halt simulator
+0000108E                            83      
+0000108E                            84  * Put variables and constants here
+0000108E                            85  
+0000108E                            86      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -70,7 +97,17 @@ SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
 ADDR1               4000
+CHECK0              100C
+CHECK1              1028
+CR                  D
+DONE                1084
+FOR                 1044
 INPUT1              A000
 INPUT2              A001
-MESSAGE             1018
+INV                 1055
+INVALID             1076
+LF                  A
+MESSAGE             1044
 START               1000
+SUBLET0             1038
+SUBNUM0             102C
