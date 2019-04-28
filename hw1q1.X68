@@ -19,6 +19,24 @@ START:                  ; first instruction of program
     
     MOVEA.L D3,A0
 
+
+* Q2
+    MOVE.L #$C1A8E392,D0
+    
+    ASL.B #2,D0
+    
+    MOVE.L #$C1A8E392,D0
+    
+    ASL.L #5,D0
+    
+    MOVE.L #$C1A8E392,D0
+    
+    LSR.B #4,D0
+
+    MOVE.L #$C1A8E392,D0
+    
+    ROR.W #2,D0
+   
 * Put program code here
 
     SIMHALT             ; halt simulator
@@ -26,6 +44,7 @@ START:                  ; first instruction of program
 * Put variables and constants here
 
     END    START        ; last line of source
+
 
 *~Font name~Courier New~
 *~Font size~10~

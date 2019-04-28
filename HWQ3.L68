@@ -1,0 +1,76 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 4/27/2019 5:13:32 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :Homework 1 Question 3
+00000000                             3  * Written by :William Nguyen
+00000000                             4  * Date       :4/26/19
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000  =0000A000                  7  INPUT1   EQU $A000
+00000000  =0000A001                  8  INPUT2 EQU $A001
+00000000  =00004000                  9  Addr1 EQU $00004000
+00000000                            10  
+00000000                            11  
+00000000                            12  
+00001000                            13      ORG    $1000
+00001000                            14  START:                  ; first instruction of program
+00001000                            15  
+00001000                            16      *Intaking 2 numbers
+00001000  103C 0005                 17      MOVE.B  #5,D0           *Trap # 5 in D0
+00001004  4E4F                      18      TRAP    #15             *Read a number from the keyboard into D1.L. 
+00001006  13C1 0000A000             19      MOVE.B  D1,$A000      
+0000100C  4E4F                      20      TRAP    #15
+0000100E  13C1 0000A001             21      MOVE.B  D1,$A001
+00001014                            22      
+00001014                            23      *Converting values at $A000 and $A000 (2 individual characters) to hex
+00001014                            24      
+00001014                            25      *check if $A000 and $A001 are between 41 and 46
+00001014                            26      
+00001014                            27      
+00001014                            28      
+00001014                            29      
+00001014                            30  
+00001014                            31  
+00001014                            32      
+00001014                            33  * will need to use string or 
+00001014                            34  * single character input and convert to hex.
+00001014                            35  * Put program code here
+00001014                            36  
+00001014                            37  
+00001014                            38  * Assuming you want to convert each digit to 
+00001014                            39  * an individual ASCII character you 
+00001014                            40  * would proceed something like this:
+00001014                            41  
+00001014                            42  * If the digit is 0 through 9 add $30 to convert to ASCII.
+00001014                            43  * If the digit is A through F add $37 to convert to ASCII.
+00001014                            44  
+00001014                            45  *If the digit is '0' through '9' subtract $30 
+00001014                            46  *to convert to binary. This works because the 
+00001014                            47  *ASCII code for '0' is $30. 
+00001014                            48  *The ASCII code for '1' is $31 etc.
+00001014                            49  *If the digit is 'A' through 'F' subtract 
+00001014                            50  *$37 to convert to binary. Take a look at the 
+00001014                            51  *ASCII codes for 'A' through 'F' to see why this works.
+00001014                            52  
+00001014  FFFF FFFF                 53      SIMHALT             ; halt simulator
+00001018                            54      
+00001018= 45 6E 74 65 72 20 ...     55  MESSAGE DC.B    'Enter a number: ',0
+00001029                            56  
+00001029                            57  * Put variables and constants here
+00001029                            58  
+00001029                            59      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ADDR1               4000
+INPUT1              A000
+INPUT2              A001
+MESSAGE             1018
+START               1000

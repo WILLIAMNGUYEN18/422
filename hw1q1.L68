@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/26/2019 12:41:40 PM
+Created On: 4/26/2019 4:30:23 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :hwq1
@@ -23,13 +23,31 @@ Created On: 4/26/2019 12:41:40 PM
 0000100C                            19      
 0000100C  2043                      20      MOVEA.L D3,A0
 0000100E                            21  
-0000100E                            22  * Put program code here
-0000100E                            23  
-0000100E  FFFF FFFF                 24      SIMHALT             ; halt simulator
-00001012                            25  
-00001012                            26  * Put variables and constants here
-00001012                            27  
-00001012                            28      END    START        ; last line of source
+0000100E                            22  
+0000100E                            23  * Q2
+0000100E  203C C1A8E392             24      MOVE.L #$C1A8E392,D0
+00001014                            25      
+00001014  E500                      26      ASL.B #2,D0
+00001016                            27      
+00001016  203C C1A8E392             28      MOVE.L #$C1A8E392,D0
+0000101C                            29      
+0000101C  EB80                      30      ASL.L #5,D0
+0000101E                            31      
+0000101E  203C C1A8E392             32      MOVE.L #$C1A8E392,D0
+00001024                            33      
+00001024  E808                      34      LSR.B #4,D0
+00001026                            35  
+00001026  203C C1A8E392             36      MOVE.L #$C1A8E392,D0
+0000102C                            37      
+0000102C  E458                      38      ROR.W #2,D0
+0000102E                            39     
+0000102E                            40  * Put program code here
+0000102E                            41  
+0000102E  FFFF FFFF                 42      SIMHALT             ; halt simulator
+00001032                            43  
+00001032                            44  * Put variables and constants here
+00001032                            45  
+00001032                            46      END    START        ; last line of source
 
 No errors detected
 No warnings generated
