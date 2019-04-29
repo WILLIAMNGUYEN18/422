@@ -1,9 +1,9 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/27/2019 6:38:04 PM
+Created On: 4/29/2019 2:01:01 PM
 
 00000000                             1  *-----------------------------------------------------------
-00000000                             2  * Title      :Homework 1 Question 3
+00000000                             2  * Title      :Homework 2 Question 3
 00000000                             3  * Written by :William Nguyen
 00000000                             4  * Date       :4/26/19
 00000000                             5  * Description:
@@ -12,86 +12,100 @@ Created On: 4/27/2019 6:38:04 PM
 00000000  =0000A001                  8  INPUT2 EQU $A001
 00000000  =00004000                  9  Addr1 EQU $00004000
 00000000                            10  
-00000000                            11  
-00000000                            12  
-00001000                            13      ORG    $1000
-00001000                            14  START:                  ; first instruction of program
-00001000                            15  
-00001000                            16      *Intaking 2 numbers
-00001000  103C 0005                 17      MOVE.B  #5,D0           *Trap # 5 in D0
-00001004  4E4F                      18      TRAP    #15             *Read a number from the keyboard into D1.L. 
-00001006  13C1 0000A000             19      MOVE.B  D1,$A000      
-0000100C                            20      
-0000100C                            21      *Converting values at $A000 and $A000 (2 individual characters) to hex
-0000100C                            22      
-0000100C                            23      *check if $A000 and $A001 are 41 - 46
-0000100C                            24      
-0000100C                            25      *else, assuming proper input, they are 30 - 39
-0000100C                            26      
-0000100C                            27      **layer check. first for check bottom. then check top (0-9)
-0000100C                            28      **if higher than top, check top for A-F
+00000000                            11  *creating a list from $6000-8000
+00000000                            12  *LIST    DC.W    $6000,$6001,$6002
+00000000                            13  
+00000000  =00006000                 14  ARR     EQU     $6000
+00000000                            15  
+00000000                            16  
+00000000                            17  
+00001000                            18      ORG    $1000
+00001000                            19  START:                  ; first instruction of program
+00001000                            20  
+00001000                            21      *Intaking 2 numbers
+00001000  103C 0005                 22      MOVE.B  #5,D0           *Trap # 5 in D0
+00001004  4E4F                      23      TRAP    #15             *Read a number from the keyboard into D1.L. 
+00001006  13C1 0000A000             24      MOVE.B  D1,$A000      
+0000100C                            25      
+0000100C                            26      *Converting values at $A000 and $A000 (2 individual characters) to hex
+0000100C                            27      
+0000100C                            28      *check if $A000 and $A001 are 41 - 46
 0000100C                            29      
-0000100C                            30  CHECK0
-0000100C  0C39 0030 0000A000        31      CMP.B   #$30,(INPUT1)           Compares D1 to 30
-00001014  6D00 007E                 32      BLT     INVALID         BLT branches if D1 is less than 30
-00001018  0C39 0039 0000A000        33      CMP.B   #$39,(INPUT1)           Compares D1 to 40
-00001020  6E00 0006                 34      BGT     CHECK1         BGT branches if D1 is greater than 39
-00001024  6000 0012                 35      BRA     SUBNUM0
-00001028                            36  
-00001028                            37  
-00001028                            38  CHECK1
-00001028  0C39 0047 0000A000        39      CMP.B   #$47,(INPUT1)           Compares D1 to 47
-00001030  6E00 0062                 40      BGT     INVALID         BGT branches if D1 is greater than 46
-00001034  6000 000E                 41      BRA     SUBLET0          
-00001038                            42  
-00001038                            43  SUBNUM0
-00001038  0439 0030 0000A000        44      SUBI.B  #$30,INPUT1      Reduce to Binary equiv of 0-9
-00001040  6000 000E                 45      BRA STFOR
-00001044                            46  
-00001044                            47  SUBLET0
-00001044  0439 0037 0000A000        48      SUBI.B  #$37,INPUT1      Reduce to Binary equiv of A-F
-0000104C  6000 0002                 49      BRA STFOR
-00001050                            50  
-00001050                            51  
-00001050                            52  *byte data stored in memory between the addresses $6000 and $8000 
-00001050                            53  *and compare it to the (byte) data at address $A000 
-00001050                            54  *(hint: you can consider the memory between $6000 and $8000 an array).
+0000100C                            30      *else, assuming proper input, they are 30 - 39
+0000100C                            31      
+0000100C                            32      **layer check. first for check bottom. then check top (0-9)
+0000100C                            33      **if higher than top, check top for A-F
+0000100C                            34      
+0000100C                            35  CHECK0
+0000100C  0C39 0030 0000A000        36      CMP.B   #$30,(INPUT1)           Compares D1 to 30
+00001014  6D00 0092                 37      BLT     INVALID         BLT branches if D1 is less than 30
+00001018  0C39 0039 0000A000        38      CMP.B   #$39,(INPUT1)           Compares D1 to 40
+00001020  6E00 0006                 39      BGT     CHECK1         BGT branches if D1 is greater than 39
+00001024  6000 0012                 40      BRA     SUBNUM0
+00001028                            41  
+00001028                            42  
+00001028                            43  CHECK1
+00001028  0C39 0047 0000A000        44      CMP.B   #$47,(INPUT1)           Compares D1 to 47
+00001030  6E00 0076                 45      BGT     INVALID         BGT branches if D1 is greater than 46
+00001034  6000 000E                 46      BRA     SUBLET0          
+00001038                            47  
+00001038                            48  SUBNUM0
+00001038  0439 0030 0000A000        49      SUBI.B  #$30,INPUT1      Reduce to Binary equiv of 0-9
+00001040  6000 000E                 50      BRA STFOR
+00001044                            51  
+00001044                            52  SUBLET0
+00001044  0439 0037 0000A000        53      SUBI.B  #$37,INPUT1      Reduce to Binary equiv of A-F
+0000104C  6000 0002                 54      BRA STFOR
 00001050                            55  
-00001050                            56  STFOR
-00001050  7601                      57      MOVE.L  #1, D3
-00001052  283C 000007D0             58      MOVE.L  #2000,D4
-00001058  41F8 6000                 59      LEA     $6000,A0
-0000105C                            60      
-0000105C  B803                      61  LOOP    CMP.B   D3,D4
-Line 62 ERROR: Undefined symbol
-0000105E  6700 ACB6                 62          BEQ     NEXT
-00001062                            63          *Execute loop code below
-Line 64 ERROR: Invalid syntax
-00001062                            64          CMP.B
-00001062                            65          
-00001062                            66          
-00001062                            67      
-00001062                            68         
-00001062                            69  
-00001062  =0000000D                 70  CR      EQU     $0D         
-00001062  =0000000A                 71  LF      EQU     $0A 
-00001062= 45 6E 74 65 72 20 ...     72  MESSAGE DC.B    'Enter a number: ',0
-00001073= 54 68 61 74 20 69 ...     73  INV     DC.B    'That is not between 20 and 25',CR,LF,0
-00001094  43F8 1073                 74  INVALID LEA     INV,A1
-00001098  103C 000E                 75          MOVE.B  #14,D0  
-0000109C  4E4F                      76          TRAP    #15
-0000109E  6000 0002                 77          BRA     DONE
-000010A2                            78          
-000010A2  103C 0009                 79  DONE    MOVE.B  #9,D0
-000010A6  4E4F                      80          TRAP    #15 
-000010A8                            81  
-000010A8  FFFF FFFF                 82      SIMHALT             ; halt simulator
-000010AC                            83      
-000010AC                            84  * Put variables and constants here
-000010AC                            85  
-000010AC                            86      END    START        ; last line of source
+00001050                            56  
+00001050                            57  *byte data stored in memory between the addresses $6000 and $8000 
+00001050                            58  *and compare it to the (byte) data at address $A000 
+00001050                            59  *(hint: you can consider the memory between $6000 and $8000 an array).
+00001050                            60  
+00001050                            61  STFOR
+00001050  7601                      62      MOVE.L  #1, D3
+00001052  283C 000007D0             63      MOVE.L  #2000,D4
+00001058  41F8 6000                 64      LEA     ARR,A0
+0000105C  43F9 0000A000             65      LEA     INPUT1,A1
+00001062                            66      
+00001062  B803                      67  LOOP    CMP.B   D3,D4
+00001064  6700 000E                 68          BEQ     NEXT
+00001068                            69          *Execute loop code below
+00001068                            70          *compare each byte address to $A000
+00001068                            71          *If the same, store address into Addr1
+00001068  B2D8                      72          CMP.W   (A0)+,A1
+0000106A  6700 0006                 73          BEQ     STORE
+0000106E                            74          
+0000106E                            75          
+0000106E  5283                      76          ADDQ.L  #1, D3
+00001070  60F0                      77          BRA     LOOP
+00001072                            78  
+00001072                            79  *store address currently in A0 into Addr1
+00001072  4E71                      80  STORE      NOP   
+00001074                            81  
+00001074                            82  *If no data matches 6000-8000
+00001074                            83  *default to Addr1 = $6000
+00001074  4E71                      84  NEXT       NOP
+00001076                            85  
+00001076  =0000000D                 86  CR      EQU     $0D         
+00001076  =0000000A                 87  LF      EQU     $0A 
+00001076= 45 6E 74 65 72 20 ...     88  MESSAGE DC.B    'Enter a number: ',0
+00001087= 54 68 61 74 20 69 ...     89  INV     DC.B    'That is not between 20 and 25',CR,LF,0
+000010A8  43F8 1087                 90  INVALID LEA     INV,A1
+000010AC  103C 000E                 91          MOVE.B  #14,D0  
+000010B0  4E4F                      92          TRAP    #15
+000010B2  6000 0002                 93          BRA     DONE
+000010B6                            94          
+000010B6  103C 0009                 95  DONE    MOVE.B  #9,D0
+000010BA  4E4F                      96          TRAP    #15 
+000010BC                            97  
+000010BC  FFFF FFFF                 98      SIMHALT             ; halt simulator
+000010C0                            99      
+000010C0                           100  * Put variables and constants here
+000010C0                           101  
+000010C0                           102      END    START        ; last line of source
 
-2 errors detected
+No errors detected
 No warnings generated
 
 
@@ -99,18 +113,21 @@ SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
 ADDR1               4000
+ARR                 6000
 CHECK0              100C
 CHECK1              1028
 CR                  D
-DONE                10A2
+DONE                10B6
 INPUT1              A000
 INPUT2              A001
-INV                 1073
-INVALID             1094
+INV                 1087
+INVALID             10A8
 LF                  A
-LOOP                105C
-MESSAGE             1062
+LOOP                1062
+MESSAGE             1076
+NEXT                1074
 START               1000
 STFOR               1050
+STORE               1072
 SUBLET0             1044
 SUBNUM0             1038

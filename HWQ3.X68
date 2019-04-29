@@ -1,5 +1,5 @@
 *-----------------------------------------------------------
-* Title      :Homework 1 Question 3
+* Title      :Homework 2 Question 3
 * Written by :William Nguyen
 * Date       :4/26/19
 * Description:
@@ -7,6 +7,11 @@
 INPUT1   EQU $A000
 INPUT2 EQU $A001
 Addr1 EQU $00004000
+
+*creating a list from $6000-8000
+*LIST    DC.W    $6000,$6001,$6002
+
+ARR     EQU     $6000
 
 
 
@@ -56,25 +61,27 @@ SUBLET0
 STFOR
     MOVE.L  #1, D3
     MOVE.L  #2000,D4
-    LEA     $6000,A0
+    LEA     ARR,A0
+    LEA     INPUT1,A1
     
 LOOP    CMP.B   D3,D4
         BEQ     NEXT
         *Execute loop code below
         *compare each byte address to $A000
-        CMP.B   
         *If the same, store address into Addr1
+        CMP.W   (A0)+,A1
         BEQ     STORE
         
         
+        ADDQ.L  #1, D3
         BRA     LOOP
 
 *store address currently in A0 into Addr1
-STORE           
+STORE      NOP   
 
 *If no data matches 6000-8000
 *default to Addr1 = $6000
-NEXT       
+NEXT       NOP
 
 CR      EQU     $0D         
 LF      EQU     $0A 
