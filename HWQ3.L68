@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/29/2019 2:01:01 PM
+Created On: 4/29/2019 2:17:13 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Homework 2 Question 3
@@ -38,7 +38,7 @@ Created On: 4/29/2019 2:01:01 PM
 0000100C                            34      
 0000100C                            35  CHECK0
 0000100C  0C39 0030 0000A000        36      CMP.B   #$30,(INPUT1)           Compares D1 to 30
-00001014  6D00 0092                 37      BLT     INVALID         BLT branches if D1 is less than 30
+00001014  6D00 0098                 37      BLT     INVALID         BLT branches if D1 is less than 30
 00001018  0C39 0039 0000A000        38      CMP.B   #$39,(INPUT1)           Compares D1 to 40
 00001020  6E00 0006                 39      BGT     CHECK1         BGT branches if D1 is greater than 39
 00001024  6000 0012                 40      BRA     SUBNUM0
@@ -46,7 +46,7 @@ Created On: 4/29/2019 2:01:01 PM
 00001028                            42  
 00001028                            43  CHECK1
 00001028  0C39 0047 0000A000        44      CMP.B   #$47,(INPUT1)           Compares D1 to 47
-00001030  6E00 0076                 45      BGT     INVALID         BGT branches if D1 is greater than 46
+00001030  6E00 007C                 45      BGT     INVALID         BGT branches if D1 is greater than 46
 00001034  6000 000E                 46      BRA     SUBLET0          
 00001038                            47  
 00001038                            48  SUBNUM0
@@ -67,43 +67,44 @@ Created On: 4/29/2019 2:01:01 PM
 00001052  283C 000007D0             63      MOVE.L  #2000,D4
 00001058  41F8 6000                 64      LEA     ARR,A0
 0000105C  43F9 0000A000             65      LEA     INPUT1,A1
-00001062                            66      
-00001062  B803                      67  LOOP    CMP.B   D3,D4
-00001064  6700 000E                 68          BEQ     NEXT
-00001068                            69          *Execute loop code below
-00001068                            70          *compare each byte address to $A000
-00001068                            71          *If the same, store address into Addr1
-00001068  B2D8                      72          CMP.W   (A0)+,A1
-0000106A  6700 0006                 73          BEQ     STORE
-0000106E                            74          
-0000106E                            75          
-0000106E  5283                      76          ADDQ.L  #1, D3
-00001070  60F0                      77          BRA     LOOP
-00001072                            78  
-00001072                            79  *store address currently in A0 into Addr1
-00001072  4E71                      80  STORE      NOP   
-00001074                            81  
-00001074                            82  *If no data matches 6000-8000
-00001074                            83  *default to Addr1 = $6000
-00001074  4E71                      84  NEXT       NOP
-00001076                            85  
-00001076  =0000000D                 86  CR      EQU     $0D         
-00001076  =0000000A                 87  LF      EQU     $0A 
-00001076= 45 6E 74 65 72 20 ...     88  MESSAGE DC.B    'Enter a number: ',0
-00001087= 54 68 61 74 20 69 ...     89  INV     DC.B    'That is not between 20 and 25',CR,LF,0
-000010A8  43F8 1087                 90  INVALID LEA     INV,A1
-000010AC  103C 000E                 91          MOVE.B  #14,D0  
-000010B0  4E4F                      92          TRAP    #15
-000010B2  6000 0002                 93          BRA     DONE
-000010B6                            94          
-000010B6  103C 0009                 95  DONE    MOVE.B  #9,D0
-000010BA  4E4F                      96          TRAP    #15 
-000010BC                            97  
-000010BC  FFFF FFFF                 98      SIMHALT             ; halt simulator
-000010C0                            99      
-000010C0                           100  * Put variables and constants here
-000010C0                           101  
-000010C0                           102      END    START        ; last line of source
+00001062  11FC 000A 6010            66      MOVE.B  #$0A,$6010
+00001068                            67      
+00001068  B803                      68  LOOP    CMP.B   D3,D4
+0000106A  6700 000E                 69          BEQ     NEXT
+0000106E                            70          *Execute loop code below
+0000106E                            71          *compare each byte address to $A000
+0000106E                            72          *If the same, store address into Addr1
+0000106E  B2D8                      73          CMPA.W   (A0)+,A1
+00001070  6700 0006                 74          BEQ     STORE
+00001074                            75          
+00001074                            76          
+00001074  5283                      77          ADDQ.L  #1, D3
+00001076  60F0                      78          BRA     LOOP
+00001078                            79  
+00001078                            80  *store address currently in A0 into Addr1
+00001078  4E71                      81  STORE      NOP   
+0000107A                            82  
+0000107A                            83  *If no data matches 6000-8000
+0000107A                            84  *default to Addr1 = $6000
+0000107A  4E71                      85  NEXT       NOP
+0000107C                            86  
+0000107C  =0000000D                 87  CR      EQU     $0D         
+0000107C  =0000000A                 88  LF      EQU     $0A 
+0000107C= 45 6E 74 65 72 20 ...     89  MESSAGE DC.B    'Enter a number: ',0
+0000108D= 54 68 61 74 20 69 ...     90  INV     DC.B    'That is not between 20 and 25',CR,LF,0
+000010AE  43F8 108D                 91  INVALID LEA     INV,A1
+000010B2  103C 000E                 92          MOVE.B  #14,D0  
+000010B6  4E4F                      93          TRAP    #15
+000010B8  6000 0002                 94          BRA     DONE
+000010BC                            95          
+000010BC  103C 0009                 96  DONE    MOVE.B  #9,D0
+000010C0  4E4F                      97          TRAP    #15 
+000010C2                            98  
+000010C2  FFFF FFFF                 99      SIMHALT             ; halt simulator
+000010C6                           100      
+000010C6                           101  * Put variables and constants here
+000010C6                           102  
+000010C6                           103      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -117,17 +118,17 @@ ARR                 6000
 CHECK0              100C
 CHECK1              1028
 CR                  D
-DONE                10B6
+DONE                10BC
 INPUT1              A000
 INPUT2              A001
-INV                 1087
-INVALID             10A8
+INV                 108D
+INVALID             10AE
 LF                  A
-LOOP                1062
-MESSAGE             1076
-NEXT                1074
+LOOP                1068
+MESSAGE             107C
+NEXT                107A
 START               1000
 STFOR               1050
-STORE               1072
+STORE               1078
 SUBLET0             1044
 SUBNUM0             1038

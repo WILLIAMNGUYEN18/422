@@ -63,13 +63,14 @@ STFOR
     MOVE.L  #2000,D4
     LEA     ARR,A0
     LEA     INPUT1,A1
+    MOVE.B  #$0A,$6010
     
 LOOP    CMP.B   D3,D4
         BEQ     NEXT
         *Execute loop code below
         *compare each byte address to $A000
         *If the same, store address into Addr1
-        CMP.W   (A0)+,A1
+        CMPA.W   (A0)+,A1
         BEQ     STORE
         
         
