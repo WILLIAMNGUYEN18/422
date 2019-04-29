@@ -6,7 +6,8 @@
 *-----------------------------------------------------------
 INPUT1   EQU $A000
 INPUT2 EQU $A001
-Addr1 EQU $00004000
+Addr1 EQU $00006000
+ADDSUM EQU $600
 
 *creating a list from $6000-8000
 *LIST    DC.W    $6000,$6001,$6002
@@ -74,20 +75,36 @@ LOOP    CMP.B   D3,D4
         BEQ     STORE
         
         
-        ADDQ.L  #1, D3
+        ADDQ.L  #1,D3
         BRA     LOOP
 
 *store address currently in A0 into Addr1
-STORE      NOP   
+STORE   MOVE.L  A0,Addr1
+        BRA   NEXT
 
 *If no data matches 6000-8000
 *default to Addr1 = $6000
-NEXT       NOP
+*Please define a WORD variable called address Addsum. Add a series of bytes stored in the 512 consecutive memory locations beginning at address Addr1, no matter you find the target data or not. Save the sum value into Addsum.
+*There is a chance that the sum might exceed $FFFF, (exceeding the range of word value), so you will also need to store the carry bit if an overflow occurs. Store the carry bit as a BYTE variable called CarryBit.
+NEXT    MOVE.L #0, D3
+        MOVE.L #512, D4
+        MOVEA.L Addr1,A0
 
+SUM     ADD.B   (A0)+,ADDSUM
+        ADDQ.L  #1,D3
+        BRA     SUM
+    
+    
+    
 CR      EQU     $0D         
 LF      EQU     $0A 
 MESSAGE DC.B    'Enter a number: ',0
-INV     DC.B    'That is not between 20 and 25',CR,LF,0
+INV     DC.B    'That is not between 30 and 46',CR,LF,0
+
+*ADDSUM  DC.W    $600
+
+
+CarryBit DC.B   $01
 INVALID LEA     INV,A1
         MOVE.B  #14,D0  
         TRAP    #15
@@ -101,6 +118,8 @@ DONE    MOVE.B  #9,D0
 * Put variables and constants here
 
     END    START        ; last line of source
+
+
 
 
 
