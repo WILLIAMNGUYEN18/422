@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/30/2019 3:49:58 PM
+Created On: 4/30/2019 4:52:41 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Homework 2 Question 3
@@ -10,8 +10,8 @@ Created On: 4/30/2019 3:49:58 PM
 00000000                             6  *-----------------------------------------------------------
 00000000  =0000A000                  7  INPUT1   EQU $A000
 00000000  =0000A001                  8  INPUT2 EQU $A001
-00000000  =00006000                  9  Addr1 EQU $00006000
-00000000  =00000600                 10  ADDSUM EQU $600
+00000000                             9  *Addr1 EQU $00006000
+00000000                            10  *ADDSUM EQU $600
 00000000                            11  
 00000000                            12  *creating a list from $6000-8000
 00000000                            13  *LIST    DC.W    $6000,$6001,$6002
@@ -39,7 +39,7 @@ Created On: 4/30/2019 3:49:58 PM
 0000100C                            35      
 0000100C                            36  CHECK0
 0000100C  0C39 0030 0000A000        37      CMP.B   #$30,(INPUT1)           Compares D1 to 30
-00001014  6D00 00E0                 38      BLT     INVALID         BLT branches if D1 is less than 30
+00001014  6D00 010C                 38      BLT     INVALID         BLT branches if D1 is less than 30
 00001018  0C39 0039 0000A000        39      CMP.B   #$39,(INPUT1)           Compares D1 to 40
 00001020  6E00 0006                 40      BGT     CHECK1         BGT branches if D1 is greater than 39
 00001024  6000 0012                 41      BRA     SUBNUM0
@@ -47,16 +47,16 @@ Created On: 4/30/2019 3:49:58 PM
 00001028                            43  
 00001028                            44  CHECK1
 00001028  0C39 0047 0000A000        45      CMP.B   #$47,(INPUT1)           Compares D1 to 47
-00001030  6E00 00C4                 46      BGT     INVALID         BGT branches if D1 is greater than 46
+00001030  6E00 00F0                 46      BGT     INVALID         BGT branches if D1 is greater than 46
 00001034  6000 000E                 47      BRA     SUBLET0          
 00001038                            48  
 00001038                            49  SUBNUM0
 00001038  0439 0030 0000A000        50      SUBI.B  #$30,INPUT1      Reduce to Binary equiv of 0-9
-00001040  6000 000E                 51      BRA STFOR
+00001040  6000 0036                 51      BRA STFORA
 00001044                            52  
 00001044                            53  SUBLET0
 00001044  0439 0037 0000A000        54      SUBI.B  #$37,INPUT1      Reduce to Binary equiv of A-F
-0000104C  6000 0002                 55      BRA STFOR
+0000104C  6000 002A                 55      BRA STFORA
 00001050                            56  
 00001050                            57  
 00001050                            58  *byte data stored in memory between the addresses $6000 and $8000 
@@ -71,113 +71,137 @@ Created On: 4/30/2019 3:49:58 PM
 00001062  11FC 000A 6010            67      MOVE.B  #$0A,$6010
 00001068                            68      
 00001068                            69      
-00001068                            70  * SPLIT THIS INTO 2 PARTS of LOOP
-00001068                            71  * Put the start and end location in registers
-00001068                            72  * move addresses to data register and then compare
-00001068                            73  * Increment address register separately (at end)
-00001068                            74  
-00001068                            75  * CMPA.B
-00001068                            76  *i.e compare ($A000) to D3
-00001068                            77  *need to clear just in case
-00001068                            78  
-00001068                            79  
-00001068                            80  STFORA  *For Loop Preparations
-00001068  7601                      81          MOVE.L  #1, D3
-0000106A  283C 000007D0             82          MOVE.L  #2000,D4
-00001070                            83          *Locations in address registers
-00001070  47F8 6000                 84          LEA $00006000,A3
-00001074  49F9 00008000             85          LEA $00008000,A4
-0000107A                            86          *Example data to trigger
-0000107A  11FC 000A 6010            87          MOVE.B  #$0A,$6010
-00001080                            88          
-00001080                            89          *Checking for loop
-00001080  B803                      90  LOOPA   CMP.B   D3,D4
-00001082  6700 0030                 91          BEQ     NEXT
-00001086                            92          *CLEAR D5 and D6 before moving
-00001086  4245                      93          CLR     D5
-00001088  4246                      94          CLR     D6
-0000108A                            95          *Moving address registers of locations to data registers
-0000108A  1A13                      96          MOVE.B  (A3),D5
-0000108C  1C39 0000A000             97          MOVE.B  ($A000),D6
-00001092                            98          *comparing byte data of data registers
-00001092  BC05                      99          CMP.B   D5,D6
-00001094  6700 0016                100          BEQ     STORE
-00001098                           101          *Need to postdecrement without changing any other values
-00001098                           102          *ADDA.B?
-00001098  5283                     103          ADDQ.L  #1,D3
-0000109A  60E4                     104          BRA     LOOPA
-0000109C                           105          
-0000109C                           106  
-0000109C                           107  
-0000109C  B803                     108  LOOP    CMP.B   D3,D4
-0000109E  6700 0014                109          BEQ     NEXT
-000010A2                           110          *Execute loop code below
-000010A2                           111          *compare each byte address to $A000
-000010A2                           112          *If the same, store address into Addr1
-000010A2  B2D8                     113          CMPA.W   (A0)+,A1
-000010A4  6700 0006                114          BEQ     STORE
-000010A8                           115          
-000010A8                           116          
-000010A8  5283                     117          ADDQ.L  #1,D3
-000010AA  60F0                     118          BRA     LOOP
-000010AC                           119          
-000010AC                           120     
-000010AC                           121  
-000010AC                           122  *store address currently in A0 into Addr1
-000010AC  21C8 6000                123  STORE   MOVE.L  A0,Addr1
-000010B0  6000 0002                124          BRA   NEXT
-000010B4                           125  
-000010B4                           126  *For sum loops
-000010B4                           127  *2 data registers corresponding to 2 address registers
-000010B4                           128  *Intialize with (A1)+ and (A0)+
-000010B4                           129  *Put both addresses into data registers
-000010B4                           130  * sum in 2nd data register
-000010B4                           131  * update 1st data register with new address
-000010B4                           132  * re-sum in 2nd data register
-000010B4                           133  
-000010B4                           134  *If no data matches 6000-8000
-000010B4                           135  *default to Addr1 = $6000
-000010B4  7600                     136  NEXT    MOVE.L #0, D3
-000010B6  283C 00000200            137          MOVE.L #512, D4
-000010BC                           138          **Invalid Addressing on Add.b, FIX THIS?!??!
-000010BC  2078 6000                139          MOVEA.L Addr1,A0
-000010C0                           140  
-000010C0                           141  *Please define a WORD variable called address Addsum. 
-000010C0                           142  *Add a series of bytes stored in the 512 consecutive memory locations 
-000010C0                           143  *beginning at address Addr1, no matter you find the target data or not. 
-000010C0                           144  *Save the sum value into Addsum.
-000010C0                           145  *There is a chance that the sum might exceed $FFFF, 
-000010C0                           146  *(exceeding the range of word value), so you will also need to store the carry bit 
-000010C0                           147  *if an overflow occurs. Store the carry bit as a BYTE variable called CarryBit.
-000010C0                           148  
-000010C0                           149  SUM     *ADD.B   (A0)+,ADDSUM
-000010C0  5283                     150          ADDQ.L  #1,D3
-000010C2  60FC                     151          BRA     SUM
-000010C4                           152      
-000010C4                           153  *add output of 3 values: Addr1, Addsum, and CarryBit    
-000010C4                           154      
-000010C4  =0000000D                155  CR      EQU     $0D         
-000010C4  =0000000A                156  LF      EQU     $0A 
-000010C4= 45 6E 74 65 72 20 ...    157  MESSAGE DC.B    'Enter a number: ',0
-000010D5= 54 68 61 74 20 69 ...    158  INV     DC.B    'That is not between 30 and 46',CR,LF,0
-000010F5                           159  
-000010F5                           160  *ADDSUM  DC.W    $600
-000010F5                           161  
-000010F5                           162  
-000010F5= 01                       163  CarryBit DC.B   $01
-000010F6  43F8 10D5                164  INVALID LEA     INV,A1
-000010FA  103C 000E                165          MOVE.B  #14,D0  
-000010FE  4E4F                     166          TRAP    #15
-00001100  6000 0002                167          BRA     DONE
-00001104                           168          
-00001104  103C 0009                169  DONE    MOVE.B  #9,D0
-00001108  4E4F                     170          TRAP    #15 
-0000110A                           171  
-0000110A  FFFF FFFF                172      SIMHALT             ; halt simulator
-0000110E                           173      
-0000110E                           174  * Put variables and constants here
-0000110E                           175  
-0000110E                           176      END    START        ; last line of source
+00001068  B803                      70  LOOP    CMP.B   D3,D4
+0000106A  6700 004C                 71          BEQ     NEXT
+0000106E                            72          *Execute loop code below
+0000106E                            73          *compare each byte address to $A000
+0000106E                            74          *If the same, store address into Addr1
+0000106E  B2D8                      75          CMPA.W   (A0)+,A1
+00001070  6700 003C                 76          BEQ     STORE
+00001074                            77          
+00001074                            78          
+00001074  5283                      79          ADDQ.L  #1,D3
+00001076  60F0                      80          BRA     LOOP    
+00001078                            81  * SPLIT THIS INTO 2 PARTS of LOOP
+00001078                            82  * Put the start and end location in registers
+00001078                            83  * move addresses to data register and then compare
+00001078                            84  * Increment address register separately (at end)
+00001078                            85  
+00001078                            86  * CMPA.B
+00001078                            87  *i.e compare ($A000) to D3
+00001078                            88  *need to clear just in case
+00001078                            89  
+00001078                            90  
+00001078                            91  STFORA  *For Loop Preparations
+00001078  7601                      92          MOVE.L  #1, D3
+0000107A  283C 000007D0             93          MOVE.L  #2000,D4
+00001080                            94          *Locations in address registers
+00001080  47F8 6000                 95          LEA $00006000,A3
+00001084  49F9 00008000             96          LEA $00008000,A4
+0000108A                            97          *Example data to trigger
+0000108A  11FC 000A 6005            98          MOVE.B  #$0A,$6005
+00001090                            99          
+00001090                           100          *Checking for loop
+00001090  B803                     101  LOOPA   CMP.B   D3,D4
+00001092  6700 0024                102          BEQ     NEXT
+00001096                           103          *CLEAR D5 and D6 before moving
+00001096  4245                     104          CLR     D5
+00001098  4246                     105          CLR     D6
+0000109A                           106          *Moving address registers of locations to data registers
+0000109A  1A13                     107          MOVE.B  (A3),D5
+0000109C  1C39 0000A000            108          MOVE.B  ($A000),D6
+000010A2                           109          *comparing byte data of data registers
+000010A2  BC05                     110          CMP.B   D5,D6
+000010A4  6700 0008                111          BEQ     STORE
+000010A8                           112          *Incrementing for loop
+000010A8  5283                     113          ADDQ.L  #1,D3
+000010AA                           114          *Incrementing address register location
+000010AA  1A1B                     115          MOVE.B  (A3)+,D5
+000010AC  60E2                     116          BRA     LOOPA
+000010AE                           117          
+000010AE                           118  
+000010AE                           119  
+000010AE                           120  
+000010AE                           121          
+000010AE                           122     
+000010AE                           123  
+000010AE                           124  *store address currently in A0 into Addr1
+000010AE  23CB 0000111C            125  STORE   MOVE.L  A3,Addr1
+000010B4  6000 0002                126          BRA   NEXT
+000010B8                           127  
+000010B8                           128  *For sum loops
+000010B8                           129  *2 data registers corresponding to 2 address registers
+000010B8                           130  *Intialize with (A1)+ and (A0)+
+000010B8                           131  *Put both addresses into data registers
+000010B8                           132  * sum in 2nd data register
+000010B8                           133  * update 1st data register with new address
+000010B8                           134  * re-sum in 2nd data register
+000010B8                           135  
+000010B8                           136  *Setting up loop for summation
+000010B8  4243                     137  NEXT    CLR D3
+000010BA  4244                     138          CLR D4
+000010BC  4245                     139          CLR D5
+000010BE  4246                     140          CLR D6
+000010C0  7600                     141          MOVE.L  #0,D3
+000010C2  283C 00000200            142          MOVE.L  #512,D4
+000010C8                           143          *Loading addresses regarding
+000010C8  47F9 0000111C            144          LEA     Addr1,A3
+000010CE  49F9 0000111C            145          LEA     Addr1,A4
+000010D4                           146          *Need to maybe increment twice due to post-increment?
+000010D4  1A1B                     147          MOVE.B  (A3)+,D5
+000010D6                           148          
+000010D6  1C14                     149          MOVE.B  (A4),D6 
+000010D8                           150          **Invalid Addressing on Add.b, FIX THIS?!??!
+000010D8                           151          *MOVEA.L Addr1,A0
+000010D8                           152  
+000010D8                           153  *Please define a WORD variable called address Addsum. 
+000010D8                           154  *Add a series of bytes stored in the 512 consecutive memory locations 
+000010D8                           155  *beginning at address Addr1, no matter you find the target data or not. 
+000010D8                           156  *Save the sum value into Addsum.
+000010D8                           157  *There is a chance that the sum might exceed $FFFF, 
+000010D8                           158  *(exceeding the range of word value), so you will also need to store the carry bit 
+000010D8                           159  *if an overflow occurs. Store the carry bit as a BYTE variable called CarryBit.
+000010D8                           160  
+000010D8                           161          *Check outer loop and move to fin if finished iterating
+000010D8  B803                     162  SUM     CMP.B   D3,D4
+000010DA  6700 000A                163          BEQ     FIN
+000010DE                           164          *add current A3 byte value to D5. Post-Increment
+000010DE  1A1B                     165          MOVE.B  (A3)+,D5
+000010E0                           166          *Add Incrementing Address of D5 (A3) to D6
+000010E0  DC05                     167          ADD.B   D5,D6
+000010E2                           168          *Check for carry, set carry bit in subroutine
+000010E2                           169          *Increment to 512
+000010E2  5283                     170          ADDQ.L  #1,D3
+000010E4                           171          *Loop to beginning of SUM
+000010E4  60F2                     172          BRA     SUM
+000010E6                           173  *ADD.B   (A0)+,ADDSUM
+000010E6                           174  
+000010E6  4E71                     175  FIN     NOP
+000010E8                           176      
+000010E8                           177  *add output of 3 values: Addr1, Addsum, and CarryBit    
+000010E8                           178      
+000010E8  =0000000D                179  CR      EQU     $0D         
+000010E8  =0000000A                180  LF      EQU     $0A 
+000010E8= 45 6E 74 65 72 20 ...    181  MESSAGE DC.B    'Enter a number: ',0
+000010F9= 54 68 61 74 20 69 ...    182  INV     DC.B    'That is not between 30 and 46',CR,LF,0
+00001119                           183  
+0000111A= 0600                     184  ADDSUM DC.W    $0600
+0000111C= 00006000                 185  Addr1  DC.L    $00006000
+00001120                           186  
+00001120= 01                       187  CarryBit DC.B   $01
+00001122  43F8 10F9                188  INVALID LEA     INV,A1
+00001126  103C 000E                189          MOVE.B  #14,D0  
+0000112A  4E4F                     190          TRAP    #15
+0000112C  6000 0002                191          BRA     DONE
+00001130                           192          
+00001130  103C 0009                193  DONE    MOVE.B  #9,D0
+00001134  4E4F                     194          TRAP    #15 
+00001136                           195  
+00001136  FFFF FFFF                196      SIMHALT             ; halt simulator
+0000113A                           197      
+0000113A                           198  * Put variables and constants here
+0000113A                           199  
+0000113A                           200      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -186,27 +210,28 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-ADDR1               6000
-ADDSUM              600
+ADDR1               111C
+ADDSUM              111A
 ARR                 6000
-CARRYBIT            10F5
+CARRYBIT            1120
 CHECK0              100C
 CHECK1              1028
 CR                  D
-DONE                1104
+DONE                1130
+FIN                 10E6
 INPUT1              A000
 INPUT2              A001
-INV                 10D5
-INVALID             10F6
+INV                 10F9
+INVALID             1122
 LF                  A
-LOOP                109C
-LOOPA               1080
-MESSAGE             10C4
-NEXT                10B4
+LOOP                1068
+LOOPA               1090
+MESSAGE             10E8
+NEXT                10B8
 START               1000
 STFOR               1050
-STFORA              1068
-STORE               10AC
+STFORA              1078
+STORE               10AE
 SUBLET0             1044
 SUBNUM0             1038
-SUM                 10C0
+SUM                 10D8
