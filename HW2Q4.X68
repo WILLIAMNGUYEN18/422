@@ -19,7 +19,26 @@ START:                  ; first instruction of program
     
     MOVE.B  #2,D0           
     CLR.L   (A1)
-    TRAP    #15             
+    TRAP    #15
+    
+    
+    
+    MOVE.L  (A1), $1000
+    
+    LEA     MESSAGE1,A1     
+    MOVE.B  #14,D0          
+    TRAP    #15
+    
+    MOVE.B  #2,D0     
+    CLR.L   (A1)
+    TRAP    #15
+    
+    MOVE.L  (A1), $1004
+    
+    
+    *loop 8 times
+    *loop through $1000-1008
+    *resolve each value based on being a number or letter
     
             
 DONE    MOVE.B  #9,D0
@@ -28,7 +47,8 @@ DONE    MOVE.B  #9,D0
 CR      EQU     $0D         
 LF      EQU     $0A 
         
-MESSAGE DC.B    'Please enter IEEE 32-bit floating point number in hexadecimal',CR,LF,0        
+MESSAGE DC.B    'Please enter the first 4 characters of a IEEE 32-bit floating point number in hexadecimal',CR,LF,0        
+MESSAGE1 DC.B    'Please enter the last 4 charaacters of a IEEE 32-bit floating point number in hexadecimal',CR,LF,0        
  
 
     SIMHALT             ; halt simulator

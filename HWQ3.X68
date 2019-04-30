@@ -66,6 +66,48 @@ STFOR
     LEA     INPUT1,A1
     MOVE.B  #$0A,$6010
     
+    
+* SPLIT THIS INTO 2 PARTS of LOOP
+* Put the start and end location in registers
+* move addresses to data register and then compare
+* Increment address register separately (at end)
+
+* CMPA.B
+*i.e compare ($A000) to D3
+*need to clear just in case
+
+
+STFORA  *For Loop Preparations
+        MOVE.L  #1, D3
+        MOVE.L  #2000,D4
+        *Locations in address registers
+        LEA $00006000,A3
+        LEA $00008000,A4
+        *Example data to trigger
+        MOVE.B  #$0A,$6010
+        
+        *Checking for loop
+LOOPA   CMP.B   D3,D4
+        BEQ     NEXT
+        *CLEAR D5 and D6 before moving
+        CLR     D5
+        CLR     D6
+        *Moving address registers of locations to data registers
+        MOVE.B  (A3),D5
+        MOVE.B  ($A000),D6
+        *comparing byte data of data registers
+        CMP.B   D5,D6
+        BEQ     STORE
+        *Need to postdecrement without changing any other values
+        *ADDA.B?
+        *Incrementing for loop
+        ADDQ.L  #1,D3
+        *Incrementing address register location
+        MOVE.B  (A3)+,D5
+        BRA     LOOPA
+        
+
+
 LOOP    CMP.B   D3,D4
         BEQ     NEXT
         *Execute loop code below
@@ -77,24 +119,41 @@ LOOP    CMP.B   D3,D4
         
         ADDQ.L  #1,D3
         BRA     LOOP
+        
+   
 
 *store address currently in A0 into Addr1
 STORE   MOVE.L  A0,Addr1
         BRA   NEXT
 
+*For sum loops
+*2 data registers corresponding to 2 address registers
+*Intialize with (A1)+ and (A0)+
+*Put both addresses into data registers
+* sum in 2nd data register
+* update 1st data register with new address
+* re-sum in 2nd data register
+
 *If no data matches 6000-8000
 *default to Addr1 = $6000
-*Please define a WORD variable called address Addsum. Add a series of bytes stored in the 512 consecutive memory locations beginning at address Addr1, no matter you find the target data or not. Save the sum value into Addsum.
-*There is a chance that the sum might exceed $FFFF, (exceeding the range of word value), so you will also need to store the carry bit if an overflow occurs. Store the carry bit as a BYTE variable called CarryBit.
 NEXT    MOVE.L #0, D3
         MOVE.L #512, D4
+        **Invalid Addressing on Add.b, FIX THIS?!??!
         MOVEA.L Addr1,A0
 
-SUM     ADD.B   (A0)+,ADDSUM
+*Please define a WORD variable called address Addsum. 
+*Add a series of bytes stored in the 512 consecutive memory locations 
+*beginning at address Addr1, no matter you find the target data or not. 
+*Save the sum value into Addsum.
+*There is a chance that the sum might exceed $FFFF, 
+*(exceeding the range of word value), so you will also need to store the carry bit 
+*if an overflow occurs. Store the carry bit as a BYTE variable called CarryBit.
+
+SUM     *ADD.B   (A0)+,ADDSUM
         ADDQ.L  #1,D3
         BRA     SUM
     
-    
+*add output of 3 values: Addr1, Addsum, and CarryBit    
     
 CR      EQU     $0D         
 LF      EQU     $0A 
@@ -118,6 +177,7 @@ DONE    MOVE.B  #9,D0
 * Put variables and constants here
 
     END    START        ; last line of source
+
 
 
 
