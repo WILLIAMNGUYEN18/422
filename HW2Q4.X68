@@ -34,8 +34,9 @@ START:                  ; first instruction of program
     TRAP    #15
     MOVE.L  (A1),$2004
     
-    MOVE.L  D4,STORE1
-    MOVE.L  D5,STORE2
+    *checking output
+    MOVE.L  STORE1,D5
+    MOVE.L  STORE2,D6
 
     *loop 8 times
     *loop through $1000-1008
@@ -54,23 +55,50 @@ LOOPA   CMP.B   D3,D4
         CLR     D5
         CLR     D6
         *Moving address registers of locations to data registers
-        MOVE.B  (A3)+,D5
+        MOVE.B  (A3),D5
 
-        
         *comparing byte data of data register
-        CMP.B   #$30,D5
+CHECK0  CMP.B   #$30,D5
         BLT     INVALID         BLT branches if D1 is less than 30
-        CMP.B   #$39,(INPUT1)           Compares D1 to 40
+        CMP.B   #$39,D5           Compares D1 to 40
         BGT     CHECK1         BGT branches if D1 is greater than 39
         BRA     SUBNUM0
 
+CHECK1
+        CMP.B   #$47,D5           Compares D1 to 47
+        BGT     INVALID         BGT branches if D1 is greater than 46
+        BRA     SUBLET0 
+
+INC
         *Incrementing for loop
         ADDQ.L  #1,D3
         *Incrementing address register location
         MOVE.B  (A3)+,D5
         BRA     LOOPA
         
+SUBNUM0
+    SUBI.B  #$30,D5      Reduce to Binary equiv of 0-9
+    MOVE.B  D5,(A3)
+    BRA INC
+
+SUBLET0
+    SUBI.B  #$37,D5      Reduce to Binary equiv of A-F
+    MOVE.B  D5,(A3)
+    BRA INC
+
+*Find out Sign
+NEXT        
     
+
+
+PRINT    
+        BRA DONE
+
+    
+INVALID LEA     INV,A1
+        MOVE.B  #14,D0  
+        TRAP    #15
+        BRA     DONE
             
 DONE    MOVE.B  #9,D0
         TRAP    #15             Halt Simulator        
