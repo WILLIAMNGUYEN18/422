@@ -1,6 +1,6 @@
 00004000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/29/2019 5:38:08 PM
+Created On: 4/30/2019 9:30:50 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Homework 2 Question 4
@@ -15,45 +15,62 @@ Created On: 4/29/2019 5:38:08 PM
 00004000                            11  *"Please enter IEEE 32-bit floating point number in hexadecimal":
 00004000                            12  *32 bits: 1 sign, 8 exponent, 23 mantissa
 00004000                            13  *8 characters, 4 bits each
-00004000  43F9 00004036             14      LEA     MESSAGE,A1     
+00004000  43F9 00004056             14      LEA     MESSAGE,A1     
 00004006  103C 000E                 15      MOVE.B  #14,D0          
-0000400A  4E4F                      16      TRAP    #15       
-0000400C                            17  
-0000400C                            18  *-------Code for input-------
-0000400C                            19      
-0000400C  103C 0002                 20      MOVE.B  #2,D0           
-00004010  4291                      21      CLR.L   (A1)
-00004012  4E4F                      22      TRAP    #15
-00004014                            23      
-00004014                            24      
-00004014                            25      
-00004014  21D1 1000                 26      MOVE.L  (A1), $1000
-00004018                            27      
-00004018  43F9 00004092             28      LEA     MESSAGE1,A1     
-0000401E  103C 000E                 29      MOVE.B  #14,D0          
-00004022  4E4F                      30      TRAP    #15
-00004024                            31      
-00004024  103C 0002                 32      MOVE.B  #2,D0     
-00004028  4291                      33      CLR.L   (A1)
-0000402A  4E4F                      34      TRAP    #15
-0000402C                            35      
-0000402C  21D1 1004                 36      MOVE.L  (A1), $1004
-00004030                            37              
-00004030  103C 0009                 38  DONE    MOVE.B  #9,D0
-00004034  4E4F                      39          TRAP    #15             Halt Simulator        
-00004036                            40  
-00004036  =0000000D                 41  CR      EQU     $0D         
-00004036  =0000000A                 42  LF      EQU     $0A 
-00004036                            43          
-00004036= 50 6C 65 61 73 65 ...     44  MESSAGE DC.B    'Please enter the first 4 characters of a IEEE 32-bit floating point number in hexadecimal',CR,LF,0        
-00004092= 50 6C 65 61 73 65 ...     45  MESSAGE1 DC.B    'Please enter the last 4 charaacters of a IEEE 32-bit floating point number in hexadecimal',CR,LF,0        
-000040EE                            46   
-000040EE                            47  
-000040EE  FFFF FFFF                 48      SIMHALT             ; halt simulator
-000040F2                            49   
-000040F2                            50  * Put variables and constants here
-000040F2                            51  
-000040F2                            52      END    START        ; last line of source
+0000400A  4E4F                      16      TRAP    #15
+0000400C  43F9 0000408F             17      LEA     MESSAGE1,A1     
+00004012  103C 000E                 18      MOVE.B  #14,D0          
+00004016  4E4F                      19      TRAP    #15       
+00004018                            20  
+00004018                            21  *-------Code for input-------
+00004018                            22      
+00004018  43F9 000040F2             23      LEA     STORE1,A1
+0000401E  103C 0002                 24      MOVE.B  #2,D0           
+00004022  4E4F                      25      TRAP    #15
+00004024  21D1 2000                 26      MOVE.L  (A1),$2000 
+00004028                            27      
+00004028  43F9 000040B5             28      LEA     MESSAGE2,A1     
+0000402E  103C 000E                 29      MOVE.B  #14,D0          
+00004032  4E4F                      30      TRAP    #15
+00004034                            31     
+00004034  43F9 000040F6             32      LEA     STORE2,A1
+0000403A  103C 0002                 33      MOVE.B  #2,D0     
+0000403E  4E4F                      34      TRAP    #15
+00004040  21D1 2004                 35      MOVE.L  (A1),$2004
+00004044                            36      
+00004044  23C4 000040F2             37      MOVE.L  D4,STORE1
+0000404A  23C5 000040F6             38      MOVE.L  D5,STORE2
+00004050                            39      
+00004050                            40      
+00004050                            41      
+00004050                            42      *loop 8 times
+00004050                            43      *loop through $1000-1008
+00004050                            44      *resolve each value based on being a number or letter
+00004050                            45      
+00004050                            46              
+00004050  103C 0009                 47  DONE    MOVE.B  #9,D0
+00004054  4E4F                      48          TRAP    #15             Halt Simulator        
+00004056                            49  
+00004056  =0000000D                 50  CR      EQU     $0D         
+00004056  =0000000A                 51  LF      EQU     $0A 
+00004056                            52  
+00004056= 49 6E 70 75 74 20 ...     53  MESSAGE  DC.B    'Input IEEE 32-bit floating point number in hexadecimal',CR,LF,0
+0000408F= 50 6C 65 61 73 65 ...     54  MESSAGE1 DC.B    'Please enter the first 4 characters',CR,LF,0        
+000040B5= 50 6C 65 61 73 65 ...     55  MESSAGE2 DC.B    'Please enter the last 4 characters',CR,LF,0
+000040DA                            56  
+000040DA= 53 49 47 4E 0D 0A 00      57  MSG1    DC.B    'SIGN',CR,LF,0
+000040E1= 45 58 50 0D 0A 00         58  MSG2    DC.B    'EXP',CR,LF,0
+000040E7= 4D 41 4E 54 49 53 ...     59  MSG3    DC.B    'MANTISSA',CR,LF,0
+000040F2                            60  
+000040F2= 00002000                  61  STORE1   DC.L    $00002000
+000040F6= 00002004                  62  STORE2   DC.L    $00002004
+000040FA                            63   
+000040FA                            64  
+000040FA  FFFF FFFF                 65      SIMHALT             ; halt simulator
+000040FE                            66   
+000040FE                            67  * Put variables and constants here
+000040FE                            68  
+000040FE                            69      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -63,8 +80,14 @@ SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
 CR                  D
-DONE                4030
+DONE                4050
 LF                  A
-MESSAGE             4036
-MESSAGE1            4092
+MESSAGE             4056
+MESSAGE1            408F
+MESSAGE2            40B5
+MSG1                40DA
+MSG2                40E1
+MSG3                40E7
 START               4000
+STORE1              40F2
+STORE2              40F6
