@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/30/2019 7:17:50 PM
+Created On: 4/30/2019 8:10:02 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Homework 2 Question 3
@@ -39,7 +39,7 @@ Created On: 4/30/2019 7:17:50 PM
 0000100C                            35      
 0000100C                            36  CHECK0
 0000100C  0C39 0030 0000A000        37      CMP.B   #$30,(INPUT1)           Compares D1 to 30
-00001014  6D00 010C                 38      BLT     INVALID         BLT branches if D1 is less than 30
+00001014  6D00 01CC                 38      BLT     INVALID         BLT branches if D1 is less than 30
 00001018  0C39 0039 0000A000        39      CMP.B   #$39,(INPUT1)           Compares D1 to 40
 00001020  6E00 0006                 40      BGT     CHECK1         BGT branches if D1 is greater than 39
 00001024  6000 0012                 41      BRA     SUBNUM0
@@ -47,7 +47,7 @@ Created On: 4/30/2019 7:17:50 PM
 00001028                            43  
 00001028                            44  CHECK1
 00001028  0C39 0047 0000A000        45      CMP.B   #$47,(INPUT1)           Compares D1 to 47
-00001030  6E00 00F0                 46      BGT     INVALID         BGT branches if D1 is greater than 46
+00001030  6E00 01B0                 46      BGT     INVALID         BGT branches if D1 is greater than 46
 00001034  6000 000E                 47      BRA     SUBLET0          
 00001038                            48  
 00001038                            49  SUBNUM0
@@ -127,7 +127,7 @@ Created On: 4/30/2019 7:17:50 PM
 000010AE                           123  
 000010AE                           124  *store address currently in A0 into Addr1
 000010AE                           125  STORE   
-000010AE  23CB 0000111C            126          MOVE.L A3,Addr1
+000010AE  23CB 000011DC            126          MOVE.L A3,Addr1
 000010B4  6000 0002                127          BRA   NEXT
 000010B8                           128  
 000010B8                           129  *For sum loops
@@ -149,8 +149,8 @@ Created On: 4/30/2019 7:17:50 PM
 000010C8                           145          *Don't want LEA here?
 000010C8                           146          *LEA     Addr1,A3
 000010C8                           147          *LEA     Addr1,A4
-000010C8  2679 0000111C            148          MOVE.L   Addr1,A3
-000010CE  2879 0000111C            149          MOVE.L   Addr1,A4
+000010C8  2679 000011DC            148          MOVE.L   Addr1,A3
+000010CE  2879 000011DC            149          MOVE.L   Addr1,A4
 000010D4                           150          *Need to maybe increment twice due to post-increment?
 000010D4  1A1B                     151          MOVE.B  (A3)+,D5
 000010D6                           152          
@@ -168,46 +168,104 @@ Created On: 4/30/2019 7:17:50 PM
 000010D8                           164  
 000010D8                           165          *Check outer loop and move to fin if finished iterating
 000010D8  B843                     166  SUM     CMP.W   D3,D4
-000010DA  6700 000A                167          BEQ     FIN
+000010DA  6700 001A                167          BEQ     FIN
 000010DE                           168          *add current A3 byte value to D5. Post-Increment
 000010DE  1A1B                     169          MOVE.B  (A3)+,D5
 000010E0                           170          *Add Incrementing Address of D5 (A3) to D6
 000010E0  DC45                     171          ADD.W   D5,D6
-000010E2                           172          *Check for carry, set carry bit in subroutine
-000010E2                           173          *Increment to 512
-000010E2  5283                     174          ADDQ.L  #1,D3
-000010E4                           175          *Loop to beginning of SUM
-000010E4  60F2                     176          BRA     SUM
-000010E6                           177  *ADD.B   (A0)+,ADDSUM
-000010E6                           178  
-000010E6                           179  *Need to set Addsum to equal D6 value
-000010E6                           180  *Need to output Addr1, Addsum Value, a
-000010E6  4E71                     181  FIN     NOP
-000010E8                           182      
-000010E8                           183  *add output of 3 values: Addr1, Addsum, and CarryBit    
-000010E8                           184      
-000010E8  =0000000D                185  CR      EQU     $0D         
-000010E8  =0000000A                186  LF      EQU     $0A 
-000010E8= 45 6E 74 65 72 20 ...    187  MESSAGE DC.B    'Enter a number: ',0
-000010F9= 54 68 61 74 20 69 ...    188  INV     DC.B    'That is not between 30 and 46',CR,LF,0
-00001119                           189  
-0000111A= 0600                     190  ADDSUM DC.W    $0600
-0000111C= 00006000                 191  Addr1  DC.L    $00006000
-00001120                           192  
-00001120= 01                       193  CarryBit DC.B   $01
-00001122  43F8 10F9                194  INVALID LEA     INV,A1
-00001126  103C 000E                195          MOVE.B  #14,D0  
-0000112A  4E4F                     196          TRAP    #15
-0000112C  6000 0002                197          BRA     DONE
-00001130                           198          
-00001130  103C 0009                199  DONE    MOVE.B  #9,D0
-00001134  4E4F                     200          TRAP    #15 
-00001136                           201  
-00001136  FFFF FFFF                202      SIMHALT             ; halt simulator
-0000113A                           203      
-0000113A                           204  * Put variables and constants here
-0000113A                           205  
-0000113A                           206      END    START        ; last line of source
+000010E2  6500 0006                172          BCS     CBIT
+000010E6                           173          *Check for carry, set carry bit in subroutine
+000010E6                           174          *Increment to 512
+000010E6  5283                     175          ADDQ.L  #1,D3
+000010E8                           176          *Loop to beginning of SUM
+000010E8  60EE                     177          BRA     SUM
+000010EA                           178  
+000010EA  23FC 00000001 000011E0   179  CBIT    MOVE.L  #1,CarryBit
+000010F4  60E2                     180          BRA     SUM
+000010F6                           181  
+000010F6                           182  *Need to set Addsum to equal D6 value
+000010F6                           183  *Need to output Addr1, Addsum Value, and CarryBit
+000010F6                           184  *need to put values in D1
+000010F6  43F9 000011D6            185  FIN     LEA     SPACE,A1
+000010FC  103C 0000                186          MOVE.B  #0,D0
+00001100  4E4F                     187          TRAP    #15
+00001102                           188  
+00001102  43F9 000011B1            189          LEA     MSG1,A1
+00001108  103C 0000                190          MOVE.B  #0,D0
+0000110C  4E4F                     191          TRAP    #15
+0000110E                           192  
+0000110E  43F9 000011DC            193          LEA  Addr1,A1
+00001114  2211                     194          MOVE.L  (A1),D1
+00001116  103C 000F                195          MOVE.B  #15,D0
+0000111A  143C 0010                196          MOVE.B  #16,D2
+0000111E  4E4F                     197          TRAP    #15
+00001120                           198          
+00001120  43F9 000011D6            199          LEA     SPACE,A1
+00001126  103C 0000                200          MOVE.B  #0,D0
+0000112A  4E4F                     201          TRAP    #15
+0000112C                           202          
+0000112C  43F9 000011BC            203          LEA     MSG2,A1
+00001132  103C 0000                204          MOVE.B  #0,D0
+00001136  4E4F                     205          TRAP    #15
+00001138                           206          
+00001138  43F9 000011E0            207          LEA  CarryBit,A1
+0000113E  2211                     208          MOVE.L  (A1),D1
+00001140  103C 000F                209          MOVE.B  #15,D0
+00001144  143C 0010                210          MOVE.B  #16,D2
+00001148  4E4F                     211          TRAP    #15
+0000114A                           212          
+0000114A  43F9 000011D6            213          LEA     SPACE,A1
+00001150  103C 0000                214          MOVE.B  #0,D0
+00001154  4E4F                     215          TRAP    #15
+00001156                           216          
+00001156                           217  *        LEA     MSG3,A1
+00001156                           218  *        MOVE.B  #0,D0
+00001156                           219  *        TRAP    #15
+00001156  43F9 000011CB            220          LEA     TEST,A1
+0000115C  103C 000D                221          MOVE.B  #13,D0
+00001160  4E4F                     222          TRAP    #15
+00001162                           223  
+00001162                           224          
+00001162  23C6 000011DA            225          MOVE.L D6,ADDSUM
+00001168                           226          
+00001168  43F9 000011DA            227          LEA  ADDSUM,A1
+0000116E  2211                     228          MOVE.L  (A1),D1
+00001170  103C 000F                229          MOVE.B  #15,D0
+00001174  143C 0010                230          MOVE.B  #16,D2
+00001178  4E4F                     231          TRAP    #15
+0000117A                           232          
+0000117A  103C 0009                233  DONE    MOVE.B  #9,D0
+0000117E  4E4F                     234          TRAP    #15
+00001180                           235          
+00001180                           236  *add output of 3 values: Addr1, Addsum, and CarryBit    
+00001180                           237      
+00001180  =0000000D                238  CR      EQU     $0D         
+00001180  =0000000A                239  LF      EQU     $0A 
+00001180= 45 6E 74 65 72 20 ...    240  MESSAGE DC.B    'Enter a number: ',0
+00001191= 54 68 61 74 20 69 ...    241  INV     DC.B    'That is not between 30 and 46',CR,LF,0
+000011B1                           242  
+000011B1= 41 64 64 72 65 73 ...    243  MSG1    DC.B    'Address 1:',0
+000011BC= 43 61 72 72 79 20 ...    244  MSG2    DC.B    'Carry Bit',0
+000011C6= 53 75 6D 3A 00           245  MSG3    DC.B    'Sum:',0
+000011CB= 53 75 6D 6D 61 74 ...    246  TEST    DC.B    'Summation:',0
+000011D6= 0D 0A 00                 247  SPACE   DC.B    '',CR,LF,0
+000011D9                           248  
+000011DA= 0600                     249  ADDSUM DC.W    $0600
+000011DC= 00006000                 250  Addr1  DC.L    $00006000
+000011E0                           251  
+000011E0= 00                       252  CarryBit DC.B   $00
+000011E2  43F8 1191                253  INVALID LEA     INV,A1
+000011E6  103C 000E                254          MOVE.B  #14,D0  
+000011EA  4E4F                     255          TRAP    #15
+000011EC  608C                     256          BRA     DONE
+000011EE                           257          
+000011EE                           258   
+000011EE                           259  
+000011EE  FFFF FFFF                260      SIMHALT             ; halt simulator
+000011F2                           261      
+000011F2                           262  * Put variables and constants here
+000011F2                           263  
+000011F2                           264      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -216,24 +274,29 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-ADDR1               111C
-ADDSUM              111A
+ADDR1               11DC
+ADDSUM              11DA
 ARR                 6000
-CARRYBIT            1120
+CARRYBIT            11E0
+CBIT                10EA
 CHECK0              100C
 CHECK1              1028
 CR                  D
-DONE                1130
-FIN                 10E6
+DONE                117A
+FIN                 10F6
 INPUT1              A000
 INPUT2              A001
-INV                 10F9
-INVALID             1122
+INV                 1191
+INVALID             11E2
 LF                  A
 LOOP                1068
 LOOPA               1090
-MESSAGE             10E8
+MESSAGE             1180
+MSG1                11B1
+MSG2                11BC
+MSG3                11C6
 NEXT                10B8
+SPACE               11D6
 START               1000
 STFOR               1050
 STFORA              1078
@@ -241,3 +304,4 @@ STORE               10AE
 SUBLET0             1044
 SUBNUM0             1038
 SUM                 10D8
+TEST                11CB

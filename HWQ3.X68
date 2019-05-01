@@ -169,17 +169,70 @@ SUM     CMP.W   D3,D4
         MOVE.B  (A3)+,D5
         *Add Incrementing Address of D5 (A3) to D6
         ADD.W   D5,D6
+        BCS     CBIT
         *Check for carry, set carry bit in subroutine
         *Increment to 512
         ADDQ.L  #1,D3
         *Loop to beginning of SUM
         BRA     SUM
-*ADD.B   (A0)+,ADDSUM
+
+CBIT    MOVE.L  #1,CarryBit
+        BRA     SUM
 
 *Need to set Addsum to equal D6 value
-*Need to output Addr1, Addsum Value, a
-FIN     NOP
-    
+*Need to output Addr1, Addsum Value, and CarryBit
+*need to put values in D1
+FIN     LEA     SPACE,A1
+        MOVE.B  #0,D0
+        TRAP    #15
+
+        LEA     MSG1,A1
+        MOVE.B  #0,D0
+        TRAP    #15
+
+        LEA  Addr1,A1
+        MOVE.L  (A1),D1
+        MOVE.B  #15,D0
+        MOVE.B  #16,D2
+        TRAP    #15
+        
+        LEA     SPACE,A1
+        MOVE.B  #0,D0
+        TRAP    #15
+        
+        LEA     MSG2,A1
+        MOVE.B  #0,D0
+        TRAP    #15
+        
+        LEA  CarryBit,A1
+        MOVE.L  (A1),D1
+        MOVE.B  #15,D0
+        MOVE.B  #16,D2
+        TRAP    #15
+        
+        LEA     SPACE,A1
+        MOVE.B  #0,D0
+        TRAP    #15
+        
+*        LEA     MSG3,A1
+*        MOVE.B  #0,D0
+*        TRAP    #15
+        LEA     TEST,A1
+        MOVE.B  #13,D0
+        TRAP    #15
+
+        
+        MOVE.L D6,ADDSUM
+        
+        LEA  ADDSUM,A1
+        MOVE.L  (A1),D1
+        MOVE.B  #15,D0
+        MOVE.B  #16,D2
+        TRAP    #15
+        
+DONE    MOVE.B  #9,D0
+        TRAP    #15
+        
 *add output of 3 values: Addr1, Addsum, and CarryBit    
     
 CR      EQU     $0D         
@@ -187,17 +240,22 @@ LF      EQU     $0A
 MESSAGE DC.B    'Enter a number: ',0
 INV     DC.B    'That is not between 30 and 46',CR,LF,0
 
+MSG1    DC.B    'Address 1:',0
+MSG2    DC.B    'Carry Bit',0
+MSG3    DC.B    'Sum:',0
+TEST    DC.B    'Summation:',0
+SPACE   DC.B    '',CR,LF,0
+
 ADDSUM DC.W    $0600
 Addr1  DC.L    $00006000
 
-CarryBit DC.B   $01
+CarryBit DC.B   $00
 INVALID LEA     INV,A1
         MOVE.B  #14,D0  
         TRAP    #15
         BRA     DONE
         
-DONE    MOVE.B  #9,D0
-        TRAP    #15 
+ 
 
     SIMHALT             ; halt simulator
     
