@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/30/2019 7:15:10 PM
+Created On: 4/30/2019 7:17:50 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Homework 2 Question 3
@@ -172,7 +172,7 @@ Created On: 4/30/2019 7:15:10 PM
 000010DE                           168          *add current A3 byte value to D5. Post-Increment
 000010DE  1A1B                     169          MOVE.B  (A3)+,D5
 000010E0                           170          *Add Incrementing Address of D5 (A3) to D6
-000010E0  DC05                     171          ADD.B   D5,D6
+000010E0  DC45                     171          ADD.W   D5,D6
 000010E2                           172          *Check for carry, set carry bit in subroutine
 000010E2                           173          *Increment to 512
 000010E2  5283                     174          ADDQ.L  #1,D3

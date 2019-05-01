@@ -168,7 +168,7 @@ SUM     CMP.W   D3,D4
         *add current A3 byte value to D5. Post-Increment
         MOVE.B  (A3)+,D5
         *Add Incrementing Address of D5 (A3) to D6
-        ADD.B   D5,D6
+        ADD.W   D5,D6
         *Check for carry, set carry bit in subroutine
         *Increment to 512
         ADDQ.L  #1,D3
