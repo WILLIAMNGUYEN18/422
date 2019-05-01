@@ -50,7 +50,7 @@ STFORA  *For Loop Preparations
                
         *Checking for loop
 LOOPA   CMP.B   D3,D4
-        BEQ     NEXT
+        BEQ     SIGN
         *CLEAR D5 and D6 before moving
         CLR     D5
         CLR     D6
@@ -76,6 +76,39 @@ INC
         MOVE.B  (A3)+,D5
         BRA     LOOPA
         
+
+
+*Find out Sign
+*reload location
+*check if first byte is >= 8
+SIGN    CLR D3
+        
+        LEA $00002000,A3
+        MOVE.B  (A3)+,D3
+        LEA     MSG1,A1
+        MOVE.B  #14,D0
+        TRAP    #15
+        CMP.B   #$8,D3
+        BGT     NEG
+        BRA     PLUS
+        
+NEG     LEA     NE,A1
+        MOVE.B  #13,D0
+        TRAP    #15
+        BRA     MANT
+
+PLUS    LEA     P,A1
+        MOVE.B  #14,D0
+        TRAP    #15
+        BRA     MANT   
+
+MANT
+        BRA DONE     
+
+
+PRINT    
+        BRA DONE
+
 SUBNUM0
     SUBI.B  #$30,D5      Reduce to Binary equiv of 0-9
     MOVE.B  D5,(A3)
@@ -85,15 +118,6 @@ SUBLET0
     SUBI.B  #$37,D5      Reduce to Binary equiv of A-F
     MOVE.B  D5,(A3)
     BRA INC
-
-*Find out Sign
-NEXT        
-    
-
-
-PRINT    
-        BRA DONE
-
     
 INVALID LEA     INV,A1
         MOVE.B  #14,D0  
@@ -111,13 +135,17 @@ MESSAGE1 DC.B    'Please enter the first 4 characters',CR,LF,0
 MESSAGE2 DC.B    'Please enter the last 4 characters',CR,LF,0
 INV      DC.B    'That is not between 30 and 46',CR,LF,0
 
-MSG1    DC.B    'SIGN',CR,LF,0
-MSG2    DC.B    'EXP',CR,LF,0
-MSG3    DC.B    'MANTISSA',CR,LF,0
+NE      DC.B     'negative',CR,LF,0
+P       DC.B     'positive',CR,LF,0
+
+MSG1    DC.B    'SIGN Bit: ',0
+MSG2    DC.B    'EXP: ',CR,LF,0
+MSG3    DC.B    'MANTISSA: ',CR,LF,0
 
 STORE1   DC.L    $00002000
 STORE2   DC.L    $00002004
- 
+
+
 
     SIMHALT             ; halt simulator
  
