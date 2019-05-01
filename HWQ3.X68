@@ -122,7 +122,8 @@ LOOPA   CMP.B   D3,D4
    
 
 *store address currently in A0 into Addr1
-STORE   MOVE.L  A3,Addr1
+STORE   
+        MOVE.L A3,Addr1
         BRA   NEXT
 
 *For sum loops
@@ -141,8 +142,11 @@ NEXT    CLR D3
         MOVE.L  #0,D3
         MOVE.L  #512,D4
         *Loading addresses regarding
-        LEA     Addr1,A3
-        LEA     Addr1,A4
+        *Don't want LEA here?
+        *LEA     Addr1,A3
+        *LEA     Addr1,A4
+        MOVE.L   Addr1,A3
+        MOVE.L   Addr1,A4
         *Need to maybe increment twice due to post-increment?
         MOVE.B  (A3)+,D5
         
@@ -159,7 +163,7 @@ NEXT    CLR D3
 *if an overflow occurs. Store the carry bit as a BYTE variable called CarryBit.
 
         *Check outer loop and move to fin if finished iterating
-SUM     CMP.B   D3,D4
+SUM     CMP.W   D3,D4
         BEQ     FIN
         *add current A3 byte value to D5. Post-Increment
         MOVE.B  (A3)+,D5
@@ -200,6 +204,7 @@ DONE    MOVE.B  #9,D0
 * Put variables and constants here
 
     END    START        ; last line of source
+
 
 
 
