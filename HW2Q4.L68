@@ -1,6 +1,6 @@
 00004000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 4/29/2019 5:38:08 PM
+Created On: 4/30/2019 11:25:04 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Homework 2 Question 4
@@ -15,45 +15,147 @@ Created On: 4/29/2019 5:38:08 PM
 00004000                            11  *"Please enter IEEE 32-bit floating point number in hexadecimal":
 00004000                            12  *32 bits: 1 sign, 8 exponent, 23 mantissa
 00004000                            13  *8 characters, 4 bits each
-00004000  43F9 00004036             14      LEA     MESSAGE,A1     
+00004000  43F9 000040F8             14      LEA     MESSAGE,A1     
 00004006  103C 000E                 15      MOVE.B  #14,D0          
-0000400A  4E4F                      16      TRAP    #15       
-0000400C                            17  
-0000400C                            18  *-------Code for input-------
-0000400C                            19      
-0000400C  103C 0002                 20      MOVE.B  #2,D0           
-00004010  4291                      21      CLR.L   (A1)
-00004012  4E4F                      22      TRAP    #15
-00004014                            23      
-00004014                            24      
-00004014                            25      
-00004014  21D1 1000                 26      MOVE.L  (A1), $1000
-00004018                            27      
-00004018  43F9 00004092             28      LEA     MESSAGE1,A1     
-0000401E  103C 000E                 29      MOVE.B  #14,D0          
-00004022  4E4F                      30      TRAP    #15
-00004024                            31      
-00004024  103C 0002                 32      MOVE.B  #2,D0     
-00004028  4291                      33      CLR.L   (A1)
-0000402A  4E4F                      34      TRAP    #15
-0000402C                            35      
-0000402C  21D1 1004                 36      MOVE.L  (A1), $1004
-00004030                            37              
-00004030  103C 0009                 38  DONE    MOVE.B  #9,D0
-00004034  4E4F                      39          TRAP    #15             Halt Simulator        
-00004036                            40  
-00004036  =0000000D                 41  CR      EQU     $0D         
-00004036  =0000000A                 42  LF      EQU     $0A 
-00004036                            43          
-00004036= 50 6C 65 61 73 65 ...     44  MESSAGE DC.B    'Please enter the first 4 characters of a IEEE 32-bit floating point number in hexadecimal',CR,LF,0        
-00004092= 50 6C 65 61 73 65 ...     45  MESSAGE1 DC.B    'Please enter the last 4 charaacters of a IEEE 32-bit floating point number in hexadecimal',CR,LF,0        
-000040EE                            46   
-000040EE                            47  
-000040EE  FFFF FFFF                 48      SIMHALT             ; halt simulator
-000040F2                            49   
-000040F2                            50  * Put variables and constants here
-000040F2                            51  
-000040F2                            52      END    START        ; last line of source
+0000400A  4E4F                      16      TRAP    #15
+0000400C  43F9 00004131             17      LEA     MESSAGE1,A1     
+00004012  103C 000E                 18      MOVE.B  #14,D0          
+00004016  4E4F                      19      TRAP    #15       
+00004018                            20  
+00004018                            21  *-------Code for input-------
+00004018                            22      
+00004018  43F9 000041D2             23      LEA     STORE1,A1
+0000401E  103C 0002                 24      MOVE.B  #2,D0           
+00004022  4E4F                      25      TRAP    #15
+00004024  21D1 2000                 26      MOVE.L  (A1),$2000 
+00004028                            27      
+00004028  43F9 00004157             28      LEA     MESSAGE2,A1     
+0000402E  103C 000E                 29      MOVE.B  #14,D0          
+00004032  4E4F                      30      TRAP    #15
+00004034                            31     
+00004034  43F9 000041D6             32      LEA     STORE2,A1
+0000403A  103C 0002                 33      MOVE.B  #2,D0     
+0000403E  4E4F                      34      TRAP    #15
+00004040  21D1 2004                 35      MOVE.L  (A1),$2004
+00004044                            36      
+00004044                            37      *checking output
+00004044  2A39 000041D2             38      MOVE.L  STORE1,D5
+0000404A  2C39 000041D6             39      MOVE.L  STORE2,D6
+00004050                            40  
+00004050                            41      *loop 8 times
+00004050                            42      *loop through $1000-1008
+00004050                            43      *resolve each value based on being a number or letter
+00004050                            44  STFORA  *For Loop Preparations
+00004050  7600                      45          MOVE.L  #0, D3
+00004052  7808                      46          MOVE.L  #8,D4
+00004054                            47          *Locations in address registers
+00004054  47F8 2000                 48          LEA $00002000,A3
+00004058                            49          *Example data to trigger
+00004058                            50                 
+00004058                            51          *Checking for loop
+00004058  B803                      52  LOOPA   CMP.B   D3,D4
+0000405A  6700 002E                 53          BEQ     SIGN
+0000405E                            54          *CLEAR D5 and D6 before moving
+0000405E  4245                      55          CLR     D5
+00004060  4246                      56          CLR     D6
+00004062                            57          *Moving address registers of locations to data registers
+00004062  1A13                      58          MOVE.B  (A3),D5
+00004064                            59  
+00004064                            60          *comparing byte data of data register
+00004064  BA3C 0030                 61  CHECK0  CMP.B   #$30,D5
+00004068  6D00 0078                 62          BLT     INVALID         BLT branches if D1 is less than 30
+0000406C  BA3C 0039                 63          CMP.B   #$39,D5           Compares D1 to 40
+00004070  6E00 0006                 64          BGT     CHECK1         BGT branches if D1 is greater than 39
+00004074  6000 005C                 65          BRA     SUBNUM0
+00004078                            66  
+00004078                            67  CHECK1
+00004078  BA3C 0047                 68          CMP.B   #$47,D5           Compares D1 to 47
+0000407C  6E00 0064                 69          BGT     INVALID         BGT branches if D1 is greater than 46
+00004080  6000 0058                 70          BRA     SUBLET0 
+00004084                            71  
+00004084                            72  INC
+00004084                            73          *Incrementing for loop
+00004084  5283                      74          ADDQ.L  #1,D3
+00004086                            75          *Incrementing address register location
+00004086  1A1B                      76          MOVE.B  (A3)+,D5
+00004088  60CE                      77          BRA     LOOPA
+0000408A                            78          
+0000408A                            79  
+0000408A                            80  
+0000408A                            81  *Find out Sign
+0000408A                            82  *reload location
+0000408A                            83  *check if first byte is >= 8
+0000408A  4243                      84  SIGN    CLR D3
+0000408C                            85          
+0000408C  47F8 2000                 86          LEA $00002000,A3
+00004090  161B                      87          MOVE.B  (A3)+,D3
+00004092  43F9 000041B2             88          LEA     MSG1,A1
+00004098  103C 000E                 89          MOVE.B  #14,D0
+0000409C  4E4F                      90          TRAP    #15
+0000409E  B63C 0008                 91          CMP.B   #$8,D3
+000040A2  6E00 0006                 92          BGT     NEG
+000040A6  6000 0012                 93          BRA     PLUS
+000040AA                            94          
+000040AA  43F9 0000419C             95  NEG     LEA     NE,A1
+000040B0  103C 000D                 96          MOVE.B  #13,D0
+000040B4  4E4F                      97          TRAP    #15
+000040B6  6000 0012                 98          BRA     MANT
+000040BA                            99  
+000040BA  43F9 000041A7            100  PLUS    LEA     P,A1
+000040C0  103C 000E                101          MOVE.B  #14,D0
+000040C4  4E4F                     102          TRAP    #15
+000040C6  6000 0002                103          BRA     MANT   
+000040CA                           104  
+000040CA                           105  MANT
+000040CA  6000 0026                106          BRA DONE     
+000040CE                           107  
+000040CE                           108  
+000040CE                           109  PRINT    
+000040CE  6000 0022                110          BRA DONE
+000040D2                           111  
+000040D2                           112  SUBNUM0
+000040D2  0405 0030                113      SUBI.B  #$30,D5      Reduce to Binary equiv of 0-9
+000040D6  1685                     114      MOVE.B  D5,(A3)
+000040D8  60AA                     115      BRA INC
+000040DA                           116  
+000040DA                           117  SUBLET0
+000040DA  0405 0037                118      SUBI.B  #$37,D5      Reduce to Binary equiv of A-F
+000040DE  1685                     119      MOVE.B  D5,(A3)
+000040E0  60A2                     120      BRA INC
+000040E2                           121      
+000040E2  43F9 0000417C            122  INVALID LEA     INV,A1
+000040E8  103C 000E                123          MOVE.B  #14,D0  
+000040EC  4E4F                     124          TRAP    #15
+000040EE  6000 0002                125          BRA     DONE
+000040F2                           126              
+000040F2  103C 0009                127  DONE    MOVE.B  #9,D0
+000040F6  4E4F                     128          TRAP    #15             Halt Simulator        
+000040F8                           129  
+000040F8  =0000000D                130  CR      EQU     $0D         
+000040F8  =0000000A                131  LF      EQU     $0A 
+000040F8                           132  
+000040F8= 49 6E 70 75 74 20 ...    133  MESSAGE  DC.B    'Input IEEE 32-bit floating point number in hexadecimal',CR,LF,0
+00004131= 50 6C 65 61 73 65 ...    134  MESSAGE1 DC.B    'Please enter the first 4 characters',CR,LF,0        
+00004157= 50 6C 65 61 73 65 ...    135  MESSAGE2 DC.B    'Please enter the last 4 characters',CR,LF,0
+0000417C= 54 68 61 74 20 69 ...    136  INV      DC.B    'That is not between 30 and 46',CR,LF,0
+0000419C                           137  
+0000419C= 6E 65 67 61 74 69 ...    138  NE      DC.B     'negative',CR,LF,0
+000041A7= 70 6F 73 69 74 69 ...    139  P       DC.B     'positive',CR,LF,0
+000041B2                           140  
+000041B2= 53 49 47 4E 20 42 ...    141  MSG1    DC.B    'SIGN Bit: ',0
+000041BD= 45 58 50 3A 20 0D ...    142  MSG2    DC.B    'EXP: ',CR,LF,0
+000041C5= 4D 41 4E 54 49 53 ...    143  MSG3    DC.B    'MANTISSA: ',CR,LF,0
+000041D2                           144  
+000041D2= 00002000                 145  STORE1   DC.L    $00002000
+000041D6= 00002004                 146  STORE2   DC.L    $00002004
+000041DA                           147  
+000041DA                           148  
+000041DA                           149  
+000041DA  FFFF FFFF                150      SIMHALT             ; halt simulator
+000041DE                           151   
+000041DE                           152  * Put variables and constants here
+000041DE                           153  
+000041DE                           154      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -62,9 +164,31 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
+CHECK0              4064
+CHECK1              4078
 CR                  D
-DONE                4030
+DONE                40F2
+INC                 4084
+INV                 417C
+INVALID             40E2
 LF                  A
-MESSAGE             4036
-MESSAGE1            4092
+LOOPA               4058
+MANT                40CA
+MESSAGE             40F8
+MESSAGE1            4131
+MESSAGE2            4157
+MSG1                41B2
+MSG2                41BD
+MSG3                41C5
+NE                  419C
+NEG                 40AA
+P                   41A7
+PLUS                40BA
+PRINT               40CE
+SIGN                408A
 START               4000
+STFORA              4050
+STORE1              41D2
+STORE2              41D6
+SUBLET0             40DA
+SUBNUM0             40D2
