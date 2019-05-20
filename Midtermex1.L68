@@ -1,0 +1,62 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 5/1/2019 6:52:36 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :Midterm Exercise 1
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9      
+00001000                            10  
+00001000  43F8 6000                 11      LEA     $6000,A1
+00001004  32FC 7C08                 12      MOVE.W  #$7C08,(A1)+
+00001008  32FC 4428                 13      MOVE.W  #$4428,(A1)+
+0000100C  32FC 4408                 14      MOVE.W  #$4408,(A1)+
+00001010  32FC 4408                 15      MOVE.W  #$4408,(A1)+
+00001014  32FC 7C3E                 16      MOVE.W  #$7C3E,(A1)+
+00001018                            17      
+00001018                            18      *loop AND 00 FF w/ A2+
+00001018  43F8 6000                 19      LEA     $6000,A1
+0000101C  0259 00FF                 20      AND     #$00FF,(A1)+
+00001020  0259 00FF                 21      AND     #$00FF,(A1)+
+00001024  0259 00FF                 22      AND     #$00FF,(A1)+
+00001028  0259 00FF                 23      AND     #$00FF,(A1)+
+0000102C  0259 00FF                 24      AND     #$00FF,(A1)+
+00001030                            25  
+00001030                            26          
+00001030                            27      
+00001030  43F8 6000                 28      LEA     $6000,A1
+00001034                            29      *push to decrement
+00001034                            30      
+00001034  3F19                      31      MOVE.W  (A1)+,-(SP)
+00001036  3F19                      32      MOVE.W  (A1)+,-(SP)
+00001038  3F19                      33      MOVE.W  (A1)+,-(SP)
+0000103A  3F19                      34      MOVE.W  (A1)+,-(SP)
+0000103C  3F19                      35      MOVE.W  (A1)+,-(SP)
+0000103E                            36  
+0000103E  43F8 6000                 37      LEA     $6000,A1
+00001042  32DF                      38      MOVE.W  (SP)+,(A1)+
+00001044  32DF                      39      MOVE.W  (SP)+,(A1)+
+00001046  32DF                      40      MOVE.W  (SP)+,(A1)+
+00001048  32DF                      41      MOVE.W  (SP)+,(A1)+
+0000104A  32DF                      42      MOVE.W  (SP)+,(A1)+    
+0000104C                            43  * Put program code here
+0000104C                            44  
+0000104C  FFFF FFFF                 45      SIMHALT             ; halt simulator
+00001050                            46  
+00001050                            47  * Put variables and constants here
+00001050                            48  
+00001050                            49      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+START               1000

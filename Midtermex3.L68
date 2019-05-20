@@ -1,0 +1,45 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 5/1/2019 7:36:07 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :midtermex3
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000  3A3C 0003                  9      MOVE.W  #3,D5
+00001004  3C3C 0001                 10      MOVE.W  #1,D6
+00001008                            11      
+00001008                            12      *loop
+00001008                            13  LOOP    
+00001008  BA7C 0000                 14      CMP.W   #0,D5
+0000100C  6700 0008                 15      BEQ     END
+00001010  CCC5                      16      MULU.W  D5,D6
+00001012  5345                      17      SUBQ.W  #1,D5
+00001014  60F2                      18      BRA     LOOP
+00001016                            19  END
+00001016                            20  
+00001016                            21  *
+00001016                            22  
+00001016                            23       
+00001016                            24  * Put program code here
+00001016                            25  
+00001016  FFFF FFFF                 26      SIMHALT             ; halt simulator
+0000101A                            27  
+0000101A                            28  * Put variables and constants here
+0000101A                            29  
+0000101A                            30      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+END                 1016
+LOOP                1008
+START               1000
