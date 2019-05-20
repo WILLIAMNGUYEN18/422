@@ -59,9 +59,56 @@ FULLEX1 EQU $9048
         MOVE.B #15,(A1)        
 *MODE SECTION
 *if mode =
+    
+    *Load test
+    LEA DNEX1,A1
+    
+    *Move to data register
+    MOVE.L (A1),D5
 
-*REGISTER SECTION        
+    *if D5
+    CMP.L   #0,D5
+    BEQ     DATAREG
+    
+    CMP.L   #1,D5
+    BEQ     ADDREG
+    
+    CMP.L   #2,D5
+    BEQ     INDIRECT
+    
+    CMP.L   #3,D5
+    BEQ     INCREMENT
+    
+    CMP.L   #4,D5
+    BEQ     DECREMENT
+    
+    CMP.L   #7,D5
+    BEQ     ABSOLUTE
+    
+    BRA     ERROR
 
+
+*different addresses
+
+DATAREG     NOP       
+
+ADDREG      NOP
+
+INDIRECT    NOP
+
+DECREMENT   NOP
+
+ABSOLUTE    NOP
+    *load corresponding registers
+    
+    *Move to data register
+    MOVE.L (A1),D5
+    
+    
+
+ERROR       NOP
+
+*REGISTER SECTION 
 
 *Calculate hex equivalent of bit values
 *MODES
@@ -93,6 +140,7 @@ FULLEX1 EQU $9048
 * Put variables and constants here
 
     END    START        ; last line of source
+
 
 *~Font name~Courier New~
 *~Font size~10~
