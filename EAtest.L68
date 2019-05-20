@@ -1,0 +1,118 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 5/19/2019 8:53:19 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9  *hard code sample EA bits
+00001000                            10  *technically, only need to store 6 bits per, (< 1 byte)
+00001000                            11  *Can store them in longs anyways
+00001000  =00009000                 12  DNEX1   EQU $9000
+00001000  =00009008                 13  ANEX1   EQU $9008
+00001000  =00009010                 14  ANIEX1  EQU $9010
+00001000  =00009018                 15  INCEX1  EQU $9018
+00001000  =00009020                 16  DECEX1  EQU $9020
+00001000  =00009028                 17  ABSWEX1 EQU $9028
+00001000  =00009030                 18  ABSLEX1 EQU $9030
+00001000  =00009038                 19  IMEX1   EQU $9038
+00001000  =00009040                 20  ERREX1  EQU $9040
+00001000  =00009048                 21  FULLEX1 EQU $9048
+00001000                            22  
+00001000                            23  *Load a full test to be split and identified
+00001000                            24  *assumption that ordering is source, so Mode, then Register
+00001000                            25  * bits --> 00000111 --> 2 empty bits, 
+00001000                            26  *3 bits identifying as data register mode
+00001000                            27  *3 bits identifying as register number 7
+00001000  43F9 00009048             28          LEA FULLEX1,A1
+00001006  12BC 0007                 29          MOVE.B #7,(A1)
+0000100A                            30          
+0000100A                            31          
+0000100A                            32  
+0000100A                            33  *Load MODE values
+0000100A  43F9 00009000             34          LEA DNEX1,A1
+00001010  12BC 0000                 35          MOVE.B #0,(A1)
+00001014                            36          
+00001014  43F9 00009008             37          LEA ANEX1,A1
+0000101A  12BC 0001                 38          MOVE.B #1,(A1)
+0000101E                            39          
+0000101E  43F9 00009010             40          LEA ANIEX1,A1
+00001024  12BC 0002                 41          MOVE.B #2,(A1)
+00001028                            42          
+00001028  43F9 00009018             43          LEA INCEX1,A1
+0000102E  12BC 0003                 44          MOVE.B #3,(A1)
+00001032                            45          
+00001032  43F9 00009020             46          LEA DECEX1,A1
+00001038  12BC 0004                 47          MOVE.B #4,(A1)
+0000103C                            48          
+0000103C  43F9 00009028             49          LEA ABSWEX1,A1
+00001042  12BC 0007                 50          MOVE.B #7,(A1)
+00001046                            51          
+00001046  43F9 00009030             52          LEA ABSLEX1,A1
+0000104C  12BC 0007                 53          MOVE.B #7,(A1)
+00001050                            54          
+00001050  43F9 00009038             55          LEA IMEX1,A1
+00001056  12BC 0007                 56          MOVE.B #7,(A1)
+0000105A                            57  
+0000105A  43F9 00009040             58          LEA ERREX1,A1
+00001060  12BC 000F                 59          MOVE.B #15,(A1)        
+00001064                            60  *MODE SECTION
+00001064                            61  *if mode =
+00001064                            62  
+00001064                            63  *REGISTER SECTION        
+00001064                            64  
+00001064                            65  
+00001064                            66  *Calculate hex equivalent of bit values
+00001064                            67  *MODES
+00001064                            68  *000 --> 0
+00001064                            69  *001 --> 1
+00001064                            70  *010 --> 2
+00001064                            71  *011 --> 3
+00001064                            72  *100 --> 4
+00001064                            73  *111 --> 7
+00001064                            74  *ELSE, BAD FLAG
+00001064                            75  
+00001064                            76  *Register Values
+00001064                            77  *0 through 7
+00001064                            78  
+00001064                            79  *Absolute Register Values
+00001064                            80  *000 --> 0 = Absolute Addressing Word
+00001064                            81  *001 --> 1 = Absolute Addressing Long
+00001064                            82  *100 --> 4 = Immediate Data
+00001064                            83  
+00001064                            84  
+00001064                            85  
+00001064                            86  
+00001064                            87  
+00001064                            88  
+00001064                            89  * Put program code here
+00001064                            90  
+00001064  FFFF FFFF                 91      SIMHALT             ; halt simulator
+00001068                            92  
+00001068                            93  * Put variables and constants here
+00001068                            94  
+00001068                            95      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ABSLEX1             9030
+ABSWEX1             9028
+ANEX1               9008
+ANIEX1              9010
+DECEX1              9020
+DNEX1               9000
+ERREX1              9040
+FULLEX1             9048
+IMEX1               9038
+INCEX1              9018
+START               1000
