@@ -10,6 +10,8 @@ START:                  ; first instruction of program
 *technically, only need to store 6 bits per, (< 1 byte)
 *Can store them in longs anyways
 DNEX1   EQU $9000
+DNEX2   EQU $9050
+
 ANEX1   EQU $9008
 ANIEX1  EQU $9010
 INCEX1  EQU $9018
@@ -19,6 +21,10 @@ ABSLEX1 EQU $9030
 IMEX1   EQU $9038
 ERREX1  EQU $9040
 FULLEX1 EQU $9048
+
+
+*NEED TO MARK GOOD BUFFER
+*GOODBUFFER nop
 
 *Load a full test to be split and identified
 *assumption that ordering is source, so Mode, then Register
@@ -33,6 +39,9 @@ FULLEX1 EQU $9048
 *Load MODE values
         LEA DNEX1,A1
         MOVE.B #0,(A1)
+        
+        LEA DNEX2,A1
+        MOVE.B #5,(A1)
         
         LEA ANEX1,A1
         MOVE.B #1,(A1)
@@ -57,9 +66,42 @@ FULLEX1 EQU $9048
 
         LEA ERREX1,A1
         MOVE.B #15,(A1)        
+
+
+
+*Load a full test to be split and identified
+*assumption that ordering is source, so Mode, then Register
+* bits --> 00000111 --> 2 empty bits, 
+*3 bits identifying as data register mode
+*3 bits identifying as register number 7
+*        LEA FULLEX1,A1
+*        MOVE.B #7,(A1)
+
+*
+*
+*REG/MODE SPLIT
+*
+*
+
+    LEA FULLEX1,A1
+    
+
+
+
+*
+*
+*MODE/REG SPLIT
+*
+*
+
+
+
+
+*
+*
 *MODE SECTION
 *if mode =
-    
+*    
     *Load test
     LEA DNEX1,A1
     
@@ -67,6 +109,8 @@ FULLEX1 EQU $9048
     MOVE.L (A1),D5
 
     *if D5
+    
+    *0 == da
     CMP.L   #0,D5
     BEQ     DATAREG
     
@@ -90,7 +134,13 @@ FULLEX1 EQU $9048
 
 *different addresses
 
-DATAREG     NOP       
+
+*If data register, find register
+*return char value
+DATAREG     
+    
+
+            NOP       
 
 ADDREG      NOP
 
@@ -98,8 +148,12 @@ INDIRECT    NOP
 
 DECREMENT   NOP
 
+INCREMENT   NOP
+
 ABSOLUTE    NOP
     *load corresponding registers
+    
+    
     
     *Move to data register
     MOVE.L (A1),D5
@@ -140,6 +194,7 @@ ERROR       NOP
 * Put variables and constants here
 
     END    START        ; last line of source
+
 
 
 *~Font name~Courier New~
