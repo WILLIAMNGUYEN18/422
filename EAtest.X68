@@ -138,7 +138,8 @@ FULLEX1 EQU $9048
 *If data register, find register
 *return char value
 DATAREG     
-    
+    LEA DNEX2,A1
+    MOVE.L  (A1),D5
 
             NOP       
 
