@@ -21,6 +21,7 @@ ABSLEX1 EQU $9030
 IMEX1   EQU $9038
 ERREX1  EQU $9040
 FULLEX1 EQU $9048
+FULLEX2 EQU $9058
 
 
 *NEED TO MARK GOOD BUFFER
@@ -33,6 +34,18 @@ FULLEX1 EQU $9048
 *3 bits identifying as register number 7
         LEA FULLEX1,A1
         MOVE.B #7,(A1)
+        
+        
+*LOAD ALT FULL TEST
+*REGISTER THEN MODE
+*3 bits as register 7
+*3 bits as data register mode
+*00111000
+
+        LEA FULLEX2,A1
+        MOVE.B #56,(A1)
+
+
         
         
 
@@ -77,16 +90,104 @@ FULLEX1 EQU $9048
 *        LEA FULLEX1,A1
 *        MOVE.B #7,(A1)
 
+
+
+*May need to clear and initialize data registers
+
 *
 *
 *REG/MODE SPLIT
 *
 *
-
-    LEA FULLEX1,A1
+SPLITREGSET    
+    CLR     D4
+    CLR     D5
+    *REMOVE THIS TEST LATER
+    LEA     FULLEX1,A1
+    MOVE.L  (A1),D3
+    MOVE.L  #1,D4
+    MOVE.L  #4,D5
+    
+    *setup loop
+SPLITREG
+    CMP.L   D4,D5
+    BEQ     SPLITMODESET
+    LSR.L   #$1,D3
+    *Check for carry flag set from logical right shifting
+    BCS     REGCHANGE
+    *If not, just add and loop. (No changes to output D7)
+    ADDQ.L  #1,D4
+    BRA     SPLITREG
+    
+    *loop 3x
+    *OVE.B
     
 
+*Check for current iteration (each loop is on a different bit)
+REGCHANGE
+    CMP.L   #1,D4
+    BEQ     REG1BIT
+    CMP.L   #2,D4
+    BEQ     REG2BIT
+    CMP.L   #3,D4
+    BEQ     REG3BIT
+    
+    ADDQ.L  #1,D4
+    BRA     SPLITREG
 
+*If carry set and 1st bit
+*add 1 to D7
+*which sets first bit of D7 to 1
+REG1BIT
+    ADDQ.L  #1,D7
+    ADDQ.L  #1,D4
+    BRA     SPLITREG
+REG2BIT
+    ADDQ.L  #2,D7    
+    ADDQ.L  #1,D4
+    BRA     SPLITREG
+REG3BIT
+    ADDQ.L  #4,D7    
+    ADDQ.L  #1,D4
+    BRA     SPLITREG
+    
+SPLITMODESET
+    CLR D4
+    CLR D5
+    MOVE.L  #1,D4
+    MOVE.L  #4,D5
+    
+SPLITMODE
+    CMP.L   D4,D5
+    BEQ     MODE
+    LSR.L   #$1,D3
+    BCS     MODECHANGE
+    ADDQ.L  #1,D4
+    BRA     SPLITMODE
+    
+    
+MODECHANGE
+    CMP.L   #1,D4
+    BEQ     MODE1BIT
+    CMP.L   #2,D4
+    BEQ     MODE2BIT
+    CMP.L   #3,D4
+    BEQ     MODE3BIT
+    ADDQ.L  #1,D4
+    BRA     SPLITMODE
+    
+MODE1BIT
+    ADDQ.L  #1,D6
+    ADDQ.L  #1,D4
+    BRA     SPLITMODE
+MODE2BIT
+    ADDQ.L  #2,D6
+    ADDQ.L  #1,D4
+    BRA     SPLITMODE
+MODE3BIT
+    ADDQ.L  #4,D6
+    ADDQ.L  #1,D4
+    BRA     SPLITMODE    
 
 *
 *
@@ -94,7 +195,84 @@ FULLEX1 EQU $9048
 *
 *
 
+MODESPLITSET
+    CLR D4
+    CLR D5
+    MOVE.L  #1,D4
+    MOVE.L  #4,D5
+    
+MODESPLIT
+    CMP.L   D4,D5
+    BEQ     REGSPLITSET
+    LSR.L   #$1,D3
+    BCS     CHANGEMODE
+    ADDQ.L  #1,D4
+    BRA     MODESPLIT
+    
+    
+CHANGEMODE
+    CMP.L   #1,D4
+    BEQ     BITMODE1
+    CMP.L   #2,D4
+    BEQ     BITMODE2
+    CMP.L   #3,D4
+    BEQ     BITMODE3
+    ADDQ.L  #1,D4
+    BRA     MODESPLIT
 
+BITMODE1
+    ADDQ.L  #1,D6
+    ADDQ.L  #1,D4
+    BRA     MODESPLIT
+BITMODE2
+    ADDQ.L  #2,D6
+    ADDQ.L  #1,D4
+    BRA     MODESPLIT
+BITMODE3
+    ADDQ.L  #4,D6
+    ADDQ.L  #1,D4
+    BRA     MODESPLIT 
+
+REGSPLITSET  
+    CLR D4
+    CLR D5
+    MOVE.L  #1,D4
+    MOVE.L  #4,D5
+    
+REGSPLIT
+    CMP.L   D4,D5
+    BEQ     MODE
+    LSR.L   #$1,D3
+    BCS     CHANGEREG
+    ADDQ.L  #1,D4
+    BRA     REGSPLIT
+
+CHANGEREG  
+    CMP.L   #1,D4
+    BEQ     BITREG1
+    CMP.L   #2,D4
+    BEQ     BITREG2
+    CMP.L   #3,D4
+    BEQ     BITREG3
+    ADDQ.L  #1,D4
+    BRA     REGSPLIT
+    
+BITREG1
+    ADDQ.L  #1,D7
+    ADDQ.L  #1,D4
+    BRA     REGSPLIT
+BITREG2
+    ADDQ.L  #2,D7
+    ADDQ.L  #1,D4
+    BRA     REGSPLIT
+BITREG3
+    ADDQ.L  #4,D7
+    ADDQ.L  #1,D4
+    BRA     REGSPLIT 
+
+      
+*can keep Mode D6, Register D7
+*will always be same case from MODE onwards
 
 
 *
@@ -102,31 +280,54 @@ FULLEX1 EQU $9048
 *MODE SECTION
 *if mode =
 *    
+
+    *REMOVE TEST!?!?!?
     *Load test
     LEA DNEX1,A1
-    
+
+MODE
     *Move to data register
     MOVE.L (A1),D5
 
     *if D5
     
     *0 == da
-    CMP.L   #0,D5
+    *CMP.L   #0,D5
+    *BEQ     DATAREG
+    
+    *CMP.L   #1,D5
+    *BEQ     ADDREG
+    
+    *CMP.L   #2,D5
+    *BEQ     INDIRECT
+    
+    *CMP.L   #3,D5
+    *BEQ     INCREMENT
+    
+    *CMP.L   #4,D5
+    *BEQ     DECREMENT
+    
+    *CMP.L   #7,D5
+    *BEQ     ABSOLUTE
+    
+    *BRA     ERROR
+    
+    CMP.L   #0,D6
     BEQ     DATAREG
     
-    CMP.L   #1,D5
+    CMP.L   #1,D6
     BEQ     ADDREG
     
-    CMP.L   #2,D5
+    CMP.L   #2,D6
     BEQ     INDIRECT
     
-    CMP.L   #3,D5
+    CMP.L   #3,D6
     BEQ     INCREMENT
     
-    CMP.L   #4,D5
+    CMP.L   #4,D6
     BEQ     DECREMENT
     
-    CMP.L   #7,D5
+    CMP.L   #7,D6
     BEQ     ABSOLUTE
     
     BRA     ERROR
@@ -135,7 +336,8 @@ FULLEX1 EQU $9048
 *different addresses
 
 
-*If data register, find register
+*If data register, 
+*check correct register
 *return char value
 DATAREG     
     LEA DNEX2,A1
@@ -195,6 +397,7 @@ ERROR       NOP
 * Put variables and constants here
 
     END    START        ; last line of source
+
 
 
 
