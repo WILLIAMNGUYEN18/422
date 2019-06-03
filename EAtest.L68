@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 6/3/2019 8:43:39 AM
+Created On: 6/3/2019 11:10:41 AM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -290,117 +290,202 @@ Created On: 6/3/2019 8:43:39 AM
 000011B0  43F9 00009000            286      LEA DNEX1,A1
 000011B6                           287  
 000011B6                           288  MODE
-000011B6                           289      *Move to data register
-000011B6  2A11                     290      MOVE.L (A1),D5
-000011B8                           291  
-000011B8                           292      *if D5
-000011B8                           293      
-000011B8                           294      *0 == da
-000011B8                           295      *CMP.L   #0,D5
-000011B8                           296      *BEQ     DATAREG
-000011B8                           297      
-000011B8                           298      *CMP.L   #1,D5
-000011B8                           299      *BEQ     ADDREG
-000011B8                           300      
-000011B8                           301      *CMP.L   #2,D5
-000011B8                           302      *BEQ     INDIRECT
-000011B8                           303      
-000011B8                           304      *CMP.L   #3,D5
-000011B8                           305      *BEQ     INCREMENT
-000011B8                           306      
-000011B8                           307      *CMP.L   #4,D5
-000011B8                           308      *BEQ     DECREMENT
-000011B8                           309      
-000011B8                           310      *CMP.L   #7,D5
-000011B8                           311      *BEQ     ABSOLUTE
-000011B8                           312      
-000011B8                           313      *BRA     ERROR
-000011B8                           314      
-000011B8  BCBC 00000000            315      CMP.L   #0,D6
-000011BE  6700 0038                316      BEQ     DATAREG
-000011C2                           317      
-000011C2  BCBC 00000001            318      CMP.L   #1,D6
-000011C8  6700 0038                319      BEQ     ADDREG
-000011CC                           320      
-000011CC  BCBC 00000002            321      CMP.L   #2,D6
-000011D2  6700 0030                322      BEQ     INDIRECT
-000011D6                           323      
-000011D6  BCBC 00000003            324      CMP.L   #3,D6
-000011DC  6700 002A                325      BEQ     INCREMENT
-000011E0                           326      
-000011E0  BCBC 00000004            327      CMP.L   #4,D6
-000011E6  6700 001E                328      BEQ     DECREMENT
-000011EA                           329      
-000011EA  BCBC 00000007            330      CMP.L   #7,D6
-000011F0  6700 0018                331      BEQ     ABSOLUTE
-000011F4                           332      
-000011F4  6000 0018                333      BRA     ERROR
-000011F8                           334  
-000011F8                           335  
-000011F8                           336  *different addresses
-000011F8                           337  
-000011F8                           338  
-000011F8                           339  *If data register, 
-000011F8                           340  *check correct register
-000011F8                           341  *return char value
-000011F8                           342  DATAREG     
-000011F8  43F9 00009050            343      LEA DNEX2,A1
-000011FE  2A11                     344      MOVE.L  (A1),D5
-00001200                           345  
-00001200  4E71                     346              NOP       
-00001202                           347  
-00001202  4E71                     348  ADDREG      NOP
-00001204                           349  
-00001204  4E71                     350  INDIRECT    NOP
-00001206                           351  
-00001206  4E71                     352  DECREMENT   NOP
-00001208                           353  
-00001208  4E71                     354  INCREMENT   NOP
-0000120A                           355  
-0000120A  4E71                     356  ABSOLUTE    NOP
-0000120C                           357      *load corresponding registers
-0000120C                           358      
-0000120C                           359      
-0000120C                           360      
-0000120C                           361      *Move to data register
-0000120C  2A11                     362      MOVE.L (A1),D5
-0000120E                           363      
-0000120E                           364      
-0000120E                           365  
-0000120E  4E71                     366  ERROR       NOP
-00001210                           367  
-00001210                           368  *REGISTER SECTION 
-00001210                           369  
-00001210                           370  *Calculate hex equivalent of bit values
-00001210                           371  *MODES
-00001210                           372  *000 --> 0
-00001210                           373  *001 --> 1
-00001210                           374  *010 --> 2
-00001210                           375  *011 --> 3
-00001210                           376  *100 --> 4
-00001210                           377  *111 --> 7
-00001210                           378  *ELSE, BAD FLAG
-00001210                           379  
-00001210                           380  *Register Values
-00001210                           381  *0 through 7
-00001210                           382  
-00001210                           383  *Absolute Register Values
-00001210                           384  *000 --> 0 = Absolute Addressing Word
-00001210                           385  *001 --> 1 = Absolute Addressing Long
-00001210                           386  *100 --> 4 = Immediate Data
-00001210                           387  
-00001210                           388  
-00001210                           389  
-00001210                           390  
-00001210                           391  
-00001210                           392  
-00001210                           393  * Put program code here
-00001210                           394  
-00001210  FFFF FFFF                395      SIMHALT             ; halt simulator
-00001214                           396  
-00001214                           397  * Put variables and constants here
-00001214                           398  
-00001214                           399      END    START        ; last line of source
+000011B6  4244                     289      CLR D4
+000011B8  4245                     290      CLR D5
+000011BA                           291      *Move to data register
+000011BA  2A11                     292      MOVE.L (A1),D5
+000011BC                           293  
+000011BC                           294      *if D5
+000011BC                           295      
+000011BC                           296      *0 == da
+000011BC                           297      *CMP.L   #0,D5
+000011BC                           298      *BEQ     DATAREG
+000011BC                           299      
+000011BC                           300      *CMP.L   #1,D5
+000011BC                           301      *BEQ     ADDREG
+000011BC                           302      
+000011BC                           303      *CMP.L   #2,D5
+000011BC                           304      *BEQ     INDIRECT
+000011BC                           305      
+000011BC                           306      *CMP.L   #3,D5
+000011BC                           307      *BEQ     INCREMENT
+000011BC                           308      
+000011BC                           309      *CMP.L   #4,D5
+000011BC                           310      *BEQ     DECREMENT
+000011BC                           311      
+000011BC                           312      *CMP.L   #7,D5
+000011BC                           313      *BEQ     ABSOLUTE
+000011BC                           314      
+000011BC                           315      *BRA     ERROR
+000011BC                           316      
+000011BC  BCBC 00000000            317      CMP.L   #0,D6
+000011C2  6700 0038                318      BEQ     DATAREG
+000011C6                           319      
+000011C6  BCBC 00000001            320      CMP.L   #1,D6
+000011CC  6700 008C                321      BEQ     ADDREG
+000011D0                           322      
+000011D0  BCBC 00000002            323      CMP.L   #2,D6
+000011D6  6700 0086                324      BEQ     INDIRECT
+000011DA                           325      
+000011DA  BCBC 00000003            326      CMP.L   #3,D6
+000011E0  6700 0084                327      BEQ     INCREMENT
+000011E4                           328      
+000011E4  BCBC 00000004            329      CMP.L   #4,D6
+000011EA  6700 0076                330      BEQ     DECREMENT
+000011EE                           331      
+000011EE  BCBC 00000007            332      CMP.L   #7,D6
+000011F4  6700 0074                333      BEQ     ABSOLUTE
+000011F8                           334      
+000011F8  6000 0076                335      BRA     ERROR
+000011FC                           336  
+000011FC                           337  
+000011FC                           338  *different addresses
+000011FC                           339  
+000011FC                           340  
+000011FC                           341  *If data register, 
+000011FC                           342  *check correct register
+000011FC                           343  *return char value
+000011FC                           344  DATAREG     
+000011FC  BEBC 00000000            345      CMP.L   #0,D7
+00001202  6700 004C                346      BEQ     PUSHD0
+00001206  BEBC 00000001            347      CMP.L   #1,D7
+0000120C  6700 004C                348      BEQ     PUSHD1
+00001210  BEBC 00000002            349      CMP.L   #2,D7
+00001216  6700 0042                350      BEQ     PUSHD2
+0000121A  BEBC 00000003            351      CMP.L   #3,D7
+00001220  6700 0038                352      BEQ     PUSHD3
+00001224  BEBC 00000004            353      CMP.L   #4,D7
+0000122A  6700 002E                354      BEQ     PUSHD4
+0000122E  BEBC 00000005            355      CMP.L   #5,D7
+00001234  6700 0024                356      BEQ     PUSHD5
+00001238  BEBC 00000006            357      CMP.L   #6,D7
+0000123E  6700 001A                358      BEQ     PUSHD6
+00001242  BEBC 00000007            359      CMP.L   #7,D7
+00001248  6700 0010                360      BEQ     PUSHD7
+0000124C  6000 0022                361      BRA ERROR
+00001250                           362  
+00001250                           363  PUSHD0
+00001250  22F9 00001274            364      MOVE.L  DZERO,(A1)+
+00001256  6000 001A                365      BRA FINISH
+0000125A                           366      
+0000125A                           367  PUSHD1
+0000125A                           368  PUSHD2
+0000125A                           369  PUSHD3
+0000125A                           370  PUSHD4
+0000125A                           371  PUSHD5
+0000125A                           372  PUSHD6
+0000125A                           373  PUSHD7
+0000125A                           374  
+0000125A                           375      
+0000125A                           376  ADDREG      
+0000125A  6000 0014                377      BRA ERROR
+0000125E                           378  
+0000125E                           379  INDIRECT    
+0000125E  6000 0010                380      BRA ERROR
+00001262                           381  DECREMENT   
+00001262  6000 000C                382      BRA ERROR
+00001266                           383  
+00001266                           384  INCREMENT   
+00001266  6000 0008                385      BRA ERROR
+0000126A                           386  
+0000126A                           387  
+0000126A                           388  *For absolute, try storing address in data register, then converting all values to string
+0000126A                           389  *subtraction for letters and numbers
+0000126A                           390  *Josh may have something
+0000126A                           391  *
+0000126A                           392  ABSOLUTE
+0000126A                           393      
+0000126A                           394      
+0000126A  6000 0004                395      BRA ERROR
+0000126E                           396      *load corresponding registers
+0000126E                           397      
+0000126E                           398      
+0000126E                           399      
+0000126E                           400      *Move to data register
+0000126E  2A11                     401      MOVE.L (A1),D5
+00001270                           402      
+00001270                           403      
+00001270                           404  
+00001270  4E71                     405  ERROR       NOP
+00001272                           406  
+00001272                           407  
+00001272                           408  
+00001272  4E71                     409  FINISH    NOP 
+00001274                           410  
+00001274                           411  *Calculate hex equivalent of bit values
+00001274                           412  *MODES
+00001274                           413  *000 --> 0
+00001274                           414  *001 --> 1
+00001274                           415  *010 --> 2
+00001274                           416  *011 --> 3
+00001274                           417  *100 --> 4
+00001274                           418  *111 --> 7
+00001274                           419  *ELSE, BAD FLAG
+00001274                           420  
+00001274                           421  *Register Values
+00001274                           422  *0 through 7
+00001274                           423  
+00001274                           424  *Absolute Register Values
+00001274                           425  *000 --> 0 = Absolute Addressing Word
+00001274                           426  *001 --> 1 = Absolute Addressing Long
+00001274                           427  *100 --> 4 = Immediate Data
+00001274                           428  
+00001274                           429  
+00001274  =0000000D                430  CR      EQU     $0D         
+00001274  =0000000A                431  LF      EQU     $0A 
+00001274                           432  
+00001274= 44 30 00                 433  DZERO   DC.B    'D0',0
+00001277= 44 31 00                 434  DONE    DC.B    'D1',0
+0000127A= 44 32 00                 435  DTWO    DC.B    'D2',0
+0000127D= 44 33 00                 436  DTHREE  DC.B    'D3',0  
+00001280= 44 34 00                 437  DFOUR   DC.B    'D4',0
+00001283= 44 35 00                 438  DFIVE   DC.B    'D5',0
+00001286= 44 36 00                 439  DSIX    DC.B    'D6',0
+00001289= 44 37 00                 440  DSEVEN  DC.B    'D7',0
+0000128C                           441  
+0000128C= 41 30 00                 442  AZERO   DC.B    'A0',0
+0000128F= 41 31 00                 443  AONE    DC.B    'A1',0
+00001292= 41 32 00                 444  ATWO    DC.B    'A2',0
+00001295= 41 33 00                 445  ATHREE  DC.B    'A3',0
+00001298= 41 34 00                 446  AFOUR   DC.B    'A4',0
+0000129B= 41 35 00                 447  AFIVE   DC.B    'A5',0
+0000129E= 41 36 00                 448  ASIX    DC.B    'A6',0
+000012A1                           449  
+000012A1= 28 41 30 29 00           450  IZERO   DC.B    '(A0)',0
+000012A6= 28 41 31 29 00           451  IONE    DC.B    '(A1)',0
+000012AB= 28 41 32 29 00           452  ITWO    DC.B    '(A2)',0
+000012B0= 28 41 33 29 00           453  ITHREE  DC.B    '(A3)',0
+000012B5= 28 41 34 29 00           454  IFOUR   DC.B    '(A4)',0
+000012BA= 28 41 36 29 00           455  IFIVE   DC.B    '(A6)',0
+000012BF= 28 41 37 29 00           456  ISIX    DC.B    '(A7)',0
+000012C4                           457  
+000012C4= 2D 28 41 30 29 00        458  PREZERO DC.B    '-(A0)',0
+000012CA= 2D 28 41 31 29 00        459  PREONE  DC.B    '-(A1)',0
+000012D0= 2D 28 41 32 29 00        460  PRETWO  DC.B    '-(A2)',0
+000012D6= 2D 28 41 33 29 00        461  PRETHREE DC.B   '-(A3)',0
+000012DC= 2D 28 41 34 29 00        462  PREFOUR DC.B    '-(A4)',0
+000012E2= 2D 28 41 35 29 00        463  PREFIVE DC.B    '-(A5)',0
+000012E8= 2D 28 41 36 29 00        464  PRESIX  DC.B    '-(A6)',0
+000012EE                           465  
+000012EE= 28 41 30 29 2B 00        466  POZERO  DC.B    '(A0)+',0
+000012F4= 28 41 31 29 2B 00        467  POONE   DC.B    '(A1)+',0
+000012FA= 28 41 32 29 2B 00        468  POTWO   DC.B    '(A2)+',0
+00001300= 28 41 33 29 2B 00        469  POTHREE DC.B    '(A3)+',0
+00001306= 28 41 34 29 2B 00        470  POFOUR  DC.B    '(A4)+',0
+0000130C= 28 41 35 29 2B 00        471  POFIVE  DC.B    '(A5)+',0
+00001312= 28 41 36 29 2B 00        472  POSIX   DC.B    '(A6)+',0
+00001318                           473  
+00001318                           474  
+00001318                           475  
+00001318                           476  
+00001318                           477  
+00001318                           478  * Put program code here
+00001318                           479  
+00001318  FFFF FFFF                480      SIMHALT             ; halt simulator
+0000131C                           481  
+0000131C                           482  * Put variables and constants here
+0000131C                           483  
+0000131C                           484      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -410,11 +495,18 @@ SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
 ABSLEX1             9030
-ABSOLUTE            120A
+ABSOLUTE            126A
 ABSWEX1             9028
-ADDREG              1202
+ADDREG              125A
+AFIVE               129B
+AFOUR               1298
 ANEX1               9008
 ANIEX1              9010
+AONE                128F
+ASIX                129E
+ATHREE              1295
+ATWO                1292
+AZERO               128C
 BITMODE1            1152
 BITMODE2            1158
 BITMODE3            115E
@@ -423,19 +515,37 @@ BITREG2             11A4
 BITREG3             11AA
 CHANGEMODE          1130
 CHANGEREG           117C
-DATAREG             11F8
+CR                  D
+DATAREG             11FC
 DECEX1              9020
-DECREMENT           1206
+DECREMENT           1262
+DFIVE               1283
+DFOUR               1280
 DNEX1               9000
 DNEX2               9050
+DONE                1277
+DSEVEN              1289
+DSIX                1286
+DTHREE              127D
+DTWO                127A
+DZERO               1274
 ERREX1              9040
-ERROR               120E
+ERROR               1270
+FINISH              1272
 FULLEX1             9048
 FULLEX2             9058
+IFIVE               12BA
+IFOUR               12B5
 IMEX1               9038
 INCEX1              9018
-INCREMENT           1208
-INDIRECT            1204
+INCREMENT           1266
+INDIRECT            125E
+IONE                12A6
+ISIX                12BF
+ITHREE              12B0
+ITWO                12AB
+IZERO               12A1
+LF                  A
 MODE                11B6
 MODE1BIT            1106
 MODE2BIT            110C
@@ -443,6 +553,28 @@ MODE3BIT            1112
 MODECHANGE          10E4
 MODESPLIT           1120
 MODESPLITSET        1118
+POFIVE              130C
+POFOUR              1306
+POONE               12F4
+POSIX               1312
+POTHREE             1300
+POTWO               12FA
+POZERO              12EE
+PREFIVE             12E2
+PREFOUR             12DC
+PREONE              12CA
+PRESIX              12E8
+PRETHREE            12D6
+PRETWO              12D0
+PREZERO             12C4
+PUSHD0              1250
+PUSHD1              125A
+PUSHD2              125A
+PUSHD3              125A
+PUSHD4              125A
+PUSHD5              125A
+PUSHD6              125A
+PUSHD7              125A
 REG1BIT             10BA
 REG2BIT             10C0
 REG3BIT             10C6
