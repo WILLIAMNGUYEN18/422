@@ -385,7 +385,7 @@ PUSHD7
     MOVE.L  DSEVEN,(A1)+
     BRA FINISH
 
-    
+*ADDRESS REGISTER    
 ADDREG      
     CMP.L   #0,D7
     BEQ     PUSHA0
@@ -425,14 +425,127 @@ PUSHA6
     MOVE.L  ASIX,(A1)+
     BRA FINISH   
     
-
+*INDIRECT
 INDIRECT    
-    BRA ERROR
-DECREMENT   
+    CMP.L   #0,D7
+    BEQ     PUSHI1
+    CMP.L   #1,D7
+    BEQ     PUSHI1
+    CMP.L   #2,D7
+    BEQ     PUSHI2
+    CMP.L   #3,D7
+    BEQ     PUSHI3
+    CMP.L   #4,D7
+    BEQ     PUSHI4
+    CMP.L   #5,D7
+    BEQ     PUSHI5
+    CMP.L   #6,D7
+    BEQ     PUSHI6
     BRA ERROR
 
+PUSHI0
+    MOVE.L  IZERO,(A1)+
+    BRA FINISH    
+
+PUSHI1
+    MOVE.L  IONE,(A1)+
+    BRA FINISH
+PUSHI2
+    MOVE.L  ITWO,(A1)+
+    BRA FINISH
+PUSHI3
+    MOVE.L  ITHREE,(A1)+
+    BRA FINISH
+PUSHI4
+    MOVE.L  IFOUR,(A1)+
+    BRA FINISH
+PUSHI5
+    MOVE.L  IFIVE,(A1)+
+    BRA FINISH
+PUSHI6
+    MOVE.L  ISIX,(A1)+
+    BRA FINISH
+
+*POST INCREMENT    
 INCREMENT   
+    CMP.L   #0,D7
+    BEQ     PUSHPO1
+    CMP.L   #1,D7
+    BEQ     PUSHPO1
+    CMP.L   #2,D7
+    BEQ     PUSHPO2
+    CMP.L   #3,D7
+    BEQ     PUSHPO3
+    CMP.L   #4,D7
+    BEQ     PUSHPO4
+    CMP.L   #5,D7
+    BEQ     PUSHPO5
+    CMP.L   #6,D7
+    BEQ     PUSHPO6
     BRA ERROR
+
+PUSHPO0
+    MOVE.L  POZERO,(A1)+
+    BRA FINISH     
+
+PUSHPO1
+    MOVE.L  POONE,(A1)+
+    BRA FINISH
+PUSHPO2
+    MOVE.L  POTWO,(A1)+
+    BRA FINISH
+PUSHPO3
+    MOVE.L  POTHREE,(A1)+
+    BRA FINISH
+PUSHPO4
+    MOVE.L  POFOUR,(A1)+
+    BRA FINISH
+PUSHPO5
+    MOVE.L  POFIVE,(A1)+
+    BRA FINISH
+PUSHPO6
+    MOVE.L  POSIX,(A1)+
+    BRA FINISH    
+*PRE DECREMENT
+DECREMENT        
+    CMP.L   #0,D7
+    BEQ     PUSHPRE1
+    CMP.L   #1,D7
+    BEQ     PUSHPRE1
+    CMP.L   #2,D7
+    BEQ     PUSHPRE2
+    CMP.L   #3,D7
+    BEQ     PUSHPRE3
+    CMP.L   #4,D7
+    BEQ     PUSHPRE4
+    CMP.L   #5,D7
+    BEQ     PUSHPRE5
+    CMP.L   #6,D7
+    BEQ     PUSHPRE6
+    BRA ERROR
+
+PUSHPRE0
+    MOVE.L  PREZERO,(A1)+
+    BRA FINISH
+PUSHPRE1
+    MOVE.L  PREONE,(A1)+
+    BRA FINISH 
+PUSHPRE2
+    MOVE.L  PRETWO,(A1)+
+    BRA FINISH 
+PUSHPRE3
+    MOVE.L  PRETHREE,(A1)+
+    BRA FINISH 
+PUSHPRE4
+    MOVE.L  PREFOUR,(A1)+
+    BRA FINISH 
+PUSHPRE5
+    MOVE.L  PREFIVE,(A1)+
+    BRA FINISH 
+PUSHPRE6
+    MOVE.L  PRESIX,(A1)+
+    BRA FINISH       
+    
 
 
 *For absolute, try storing address in data register, then converting all values to string
@@ -520,6 +633,8 @@ POTHREE DC.B    '(A3)+',0
 POFOUR  DC.B    '(A4)+',0
 POFIVE  DC.B    '(A5)+',0
 POSIX   DC.B    '(A6)+',0
+
+
 
 
 
