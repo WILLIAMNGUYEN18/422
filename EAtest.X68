@@ -260,15 +260,15 @@ CHANGEREG
 BITREG1
     ADDQ.L  #1,D7
     ADDQ.L  #1,D4
-    BRA     MODESPLIT
+    BRA     REGSPLIT
 BITREG2
     ADDQ.L  #2,D7
     ADDQ.L  #1,D4
-    BRA     MODESPLIT
+    BRA     REGSPLIT
 BITREG3
     ADDQ.L  #4,D7
     ADDQ.L  #1,D4
-    BRA     MODESPLIT 
+    BRA     REGSPLIT 
 
       
 *can keep Mode D6, Register D7
