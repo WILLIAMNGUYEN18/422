@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 5/19/2019 8:53:19 PM
+Created On: 5/29/2019 5:40:14 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -14,89 +14,190 @@ Created On: 5/19/2019 8:53:19 PM
 00001000                            10  *technically, only need to store 6 bits per, (< 1 byte)
 00001000                            11  *Can store them in longs anyways
 00001000  =00009000                 12  DNEX1   EQU $9000
-00001000  =00009008                 13  ANEX1   EQU $9008
-00001000  =00009010                 14  ANIEX1  EQU $9010
-00001000  =00009018                 15  INCEX1  EQU $9018
-00001000  =00009020                 16  DECEX1  EQU $9020
-00001000  =00009028                 17  ABSWEX1 EQU $9028
-00001000  =00009030                 18  ABSLEX1 EQU $9030
-00001000  =00009038                 19  IMEX1   EQU $9038
-00001000  =00009040                 20  ERREX1  EQU $9040
-00001000  =00009048                 21  FULLEX1 EQU $9048
-00001000                            22  
-00001000                            23  *Load a full test to be split and identified
-00001000                            24  *assumption that ordering is source, so Mode, then Register
-00001000                            25  * bits --> 00000111 --> 2 empty bits, 
-00001000                            26  *3 bits identifying as data register mode
-00001000                            27  *3 bits identifying as register number 7
-00001000  43F9 00009048             28          LEA FULLEX1,A1
-00001006  12BC 0007                 29          MOVE.B #7,(A1)
-0000100A                            30          
-0000100A                            31          
-0000100A                            32  
-0000100A                            33  *Load MODE values
-0000100A  43F9 00009000             34          LEA DNEX1,A1
-00001010  12BC 0000                 35          MOVE.B #0,(A1)
-00001014                            36          
-00001014  43F9 00009008             37          LEA ANEX1,A1
-0000101A  12BC 0001                 38          MOVE.B #1,(A1)
-0000101E                            39          
-0000101E  43F9 00009010             40          LEA ANIEX1,A1
-00001024  12BC 0002                 41          MOVE.B #2,(A1)
-00001028                            42          
-00001028  43F9 00009018             43          LEA INCEX1,A1
-0000102E  12BC 0003                 44          MOVE.B #3,(A1)
-00001032                            45          
-00001032  43F9 00009020             46          LEA DECEX1,A1
-00001038  12BC 0004                 47          MOVE.B #4,(A1)
-0000103C                            48          
-0000103C  43F9 00009028             49          LEA ABSWEX1,A1
-00001042  12BC 0007                 50          MOVE.B #7,(A1)
-00001046                            51          
-00001046  43F9 00009030             52          LEA ABSLEX1,A1
-0000104C  12BC 0007                 53          MOVE.B #7,(A1)
-00001050                            54          
-00001050  43F9 00009038             55          LEA IMEX1,A1
-00001056  12BC 0007                 56          MOVE.B #7,(A1)
-0000105A                            57  
-0000105A  43F9 00009040             58          LEA ERREX1,A1
-00001060  12BC 000F                 59          MOVE.B #15,(A1)        
-00001064                            60  *MODE SECTION
-00001064                            61  *if mode =
-00001064                            62  
-00001064                            63  *REGISTER SECTION        
-00001064                            64  
-00001064                            65  
-00001064                            66  *Calculate hex equivalent of bit values
-00001064                            67  *MODES
-00001064                            68  *000 --> 0
-00001064                            69  *001 --> 1
-00001064                            70  *010 --> 2
-00001064                            71  *011 --> 3
-00001064                            72  *100 --> 4
-00001064                            73  *111 --> 7
-00001064                            74  *ELSE, BAD FLAG
-00001064                            75  
-00001064                            76  *Register Values
-00001064                            77  *0 through 7
-00001064                            78  
-00001064                            79  *Absolute Register Values
-00001064                            80  *000 --> 0 = Absolute Addressing Word
-00001064                            81  *001 --> 1 = Absolute Addressing Long
-00001064                            82  *100 --> 4 = Immediate Data
-00001064                            83  
-00001064                            84  
-00001064                            85  
-00001064                            86  
-00001064                            87  
-00001064                            88  
-00001064                            89  * Put program code here
-00001064                            90  
-00001064  FFFF FFFF                 91      SIMHALT             ; halt simulator
-00001068                            92  
-00001068                            93  * Put variables and constants here
-00001068                            94  
-00001068                            95      END    START        ; last line of source
+00001000  =00009050                 13  DNEX2   EQU $9050
+00001000                            14  
+00001000  =00009008                 15  ANEX1   EQU $9008
+00001000  =00009010                 16  ANIEX1  EQU $9010
+00001000  =00009018                 17  INCEX1  EQU $9018
+00001000  =00009020                 18  DECEX1  EQU $9020
+00001000  =00009028                 19  ABSWEX1 EQU $9028
+00001000  =00009030                 20  ABSLEX1 EQU $9030
+00001000  =00009038                 21  IMEX1   EQU $9038
+00001000  =00009040                 22  ERREX1  EQU $9040
+00001000  =00009048                 23  FULLEX1 EQU $9048
+00001000                            24  
+00001000                            25  
+00001000                            26  *NEED TO MARK GOOD BUFFER
+00001000                            27  *GOODBUFFER nop
+00001000                            28  
+00001000                            29  *Load a full test to be split and identified
+00001000                            30  *assumption that ordering is source, so Mode, then Register
+00001000                            31  * bits --> 00000111 --> 2 empty bits, 
+00001000                            32  *3 bits identifying as data register mode
+00001000                            33  *3 bits identifying as register number 7
+00001000  43F9 00009048             34          LEA FULLEX1,A1
+00001006  12BC 0007                 35          MOVE.B #7,(A1)
+0000100A                            36          
+0000100A                            37          
+0000100A                            38  
+0000100A                            39  *Load MODE values
+0000100A  43F9 00009000             40          LEA DNEX1,A1
+00001010  12BC 0000                 41          MOVE.B #0,(A1)
+00001014                            42          
+00001014  43F9 00009050             43          LEA DNEX2,A1
+0000101A  12BC 0005                 44          MOVE.B #5,(A1)
+0000101E                            45          
+0000101E  43F9 00009008             46          LEA ANEX1,A1
+00001024  12BC 0001                 47          MOVE.B #1,(A1)
+00001028                            48          
+00001028  43F9 00009010             49          LEA ANIEX1,A1
+0000102E  12BC 0002                 50          MOVE.B #2,(A1)
+00001032                            51          
+00001032  43F9 00009018             52          LEA INCEX1,A1
+00001038  12BC 0003                 53          MOVE.B #3,(A1)
+0000103C                            54          
+0000103C  43F9 00009020             55          LEA DECEX1,A1
+00001042  12BC 0004                 56          MOVE.B #4,(A1)
+00001046                            57          
+00001046  43F9 00009028             58          LEA ABSWEX1,A1
+0000104C  12BC 0007                 59          MOVE.B #7,(A1)
+00001050                            60          
+00001050  43F9 00009030             61          LEA ABSLEX1,A1
+00001056  12BC 0007                 62          MOVE.B #7,(A1)
+0000105A                            63          
+0000105A  43F9 00009038             64          LEA IMEX1,A1
+00001060  12BC 0007                 65          MOVE.B #7,(A1)
+00001064                            66  
+00001064  43F9 00009040             67          LEA ERREX1,A1
+0000106A  12BC 000F                 68          MOVE.B #15,(A1)        
+0000106E                            69  
+0000106E                            70  
+0000106E                            71  
+0000106E                            72  *Load a full test to be split and identified
+0000106E                            73  *assumption that ordering is source, so Mode, then Register
+0000106E                            74  * bits --> 00000111 --> 2 empty bits, 
+0000106E                            75  *3 bits identifying as data register mode
+0000106E                            76  *3 bits identifying as register number 7
+0000106E                            77  *        LEA FULLEX1,A1
+0000106E                            78  *        MOVE.B #7,(A1)
+0000106E                            79  
+0000106E                            80  *
+0000106E                            81  *
+0000106E                            82  *REG/MODE SPLIT
+0000106E                            83  *
+0000106E                            84  *
+0000106E                            85  
+0000106E  43F9 00009048             86      LEA FULLEX1,A1
+00001074                            87      
+00001074                            88  
+00001074                            89  
+00001074                            90  
+00001074                            91  *
+00001074                            92  *
+00001074                            93  *MODE/REG SPLIT
+00001074                            94  *
+00001074                            95  *
+00001074                            96  
+00001074                            97  
+00001074                            98  
+00001074                            99  
+00001074                           100  *
+00001074                           101  *
+00001074                           102  *MODE SECTION
+00001074                           103  *if mode =
+00001074                           104  *    
+00001074                           105      *Load test
+00001074  43F9 00009000            106      LEA DNEX1,A1
+0000107A                           107      
+0000107A                           108      *Move to data register
+0000107A  2A11                     109      MOVE.L (A1),D5
+0000107C                           110  
+0000107C                           111      *if D5
+0000107C                           112      
+0000107C                           113      *0 == da
+0000107C  BABC 00000000            114      CMP.L   #0,D5
+00001082  6700 0038                115      BEQ     DATAREG
+00001086                           116      
+00001086  BABC 00000001            117      CMP.L   #1,D5
+0000108C  6700 0030                118      BEQ     ADDREG
+00001090                           119      
+00001090  BABC 00000002            120      CMP.L   #2,D5
+00001096  6700 0028                121      BEQ     INDIRECT
+0000109A                           122      
+0000109A  BABC 00000003            123      CMP.L   #3,D5
+000010A0  6700 0022                124      BEQ     INCREMENT
+000010A4                           125      
+000010A4  BABC 00000004            126      CMP.L   #4,D5
+000010AA  6700 0016                127      BEQ     DECREMENT
+000010AE                           128      
+000010AE  BABC 00000007            129      CMP.L   #7,D5
+000010B4  6700 0010                130      BEQ     ABSOLUTE
+000010B8                           131      
+000010B8  6000 0010                132      BRA     ERROR
+000010BC                           133  
+000010BC                           134  
+000010BC                           135  *different addresses
+000010BC                           136  
+000010BC                           137  
+000010BC                           138  *If data register, find register
+000010BC                           139  *return char value
+000010BC                           140  DATAREG     
+000010BC                           141      
+000010BC                           142  
+000010BC  4E71                     143              NOP       
+000010BE                           144  
+000010BE  4E71                     145  ADDREG      NOP
+000010C0                           146  
+000010C0  4E71                     147  INDIRECT    NOP
+000010C2                           148  
+000010C2  4E71                     149  DECREMENT   NOP
+000010C4                           150  
+000010C4  4E71                     151  INCREMENT   NOP
+000010C6                           152  
+000010C6  4E71                     153  ABSOLUTE    NOP
+000010C8                           154      *load corresponding registers
+000010C8                           155      
+000010C8                           156      
+000010C8                           157      
+000010C8                           158      *Move to data register
+000010C8  2A11                     159      MOVE.L (A1),D5
+000010CA                           160      
+000010CA                           161      
+000010CA                           162  
+000010CA  4E71                     163  ERROR       NOP
+000010CC                           164  
+000010CC                           165  *REGISTER SECTION 
+000010CC                           166  
+000010CC                           167  *Calculate hex equivalent of bit values
+000010CC                           168  *MODES
+000010CC                           169  *000 --> 0
+000010CC                           170  *001 --> 1
+000010CC                           171  *010 --> 2
+000010CC                           172  *011 --> 3
+000010CC                           173  *100 --> 4
+000010CC                           174  *111 --> 7
+000010CC                           175  *ELSE, BAD FLAG
+000010CC                           176  
+000010CC                           177  *Register Values
+000010CC                           178  *0 through 7
+000010CC                           179  
+000010CC                           180  *Absolute Register Values
+000010CC                           181  *000 --> 0 = Absolute Addressing Word
+000010CC                           182  *001 --> 1 = Absolute Addressing Long
+000010CC                           183  *100 --> 4 = Immediate Data
+000010CC                           184  
+000010CC                           185  
+000010CC                           186  
+000010CC                           187  
+000010CC                           188  
+000010CC                           189  
+000010CC                           190  * Put program code here
+000010CC                           191  
+000010CC  FFFF FFFF                192      SIMHALT             ; halt simulator
+000010D0                           193  
+000010D0                           194  * Put variables and constants here
+000010D0                           195  
+000010D0                           196      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -106,13 +207,21 @@ SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
 ABSLEX1             9030
+ABSOLUTE            10C6
 ABSWEX1             9028
+ADDREG              10BE
 ANEX1               9008
 ANIEX1              9010
+DATAREG             10BC
 DECEX1              9020
+DECREMENT           10C2
 DNEX1               9000
+DNEX2               9050
 ERREX1              9040
+ERROR               10CA
 FULLEX1             9048
 IMEX1               9038
 INCEX1              9018
+INCREMENT           10C4
+INDIRECT            10C0
 START               1000
