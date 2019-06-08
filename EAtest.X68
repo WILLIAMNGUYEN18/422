@@ -286,6 +286,8 @@ BITREG3
     LEA DNEX1,A1
 
 MODE
+    CLR D4
+    CLR D5
     *Move to data register
     MOVE.L (A1),D5
 
@@ -340,20 +342,220 @@ MODE
 *check correct register
 *return char value
 DATAREG     
-    LEA DNEX2,A1
-    MOVE.L  (A1),D5
+    CMP.L   #0,D7
+    BEQ     PUSHD0
+    CMP.L   #1,D7
+    BEQ     PUSHD1
+    CMP.L   #2,D7
+    BEQ     PUSHD2
+    CMP.L   #3,D7
+    BEQ     PUSHD3
+    CMP.L   #4,D7
+    BEQ     PUSHD4
+    CMP.L   #5,D7
+    BEQ     PUSHD5
+    CMP.L   #6,D7
+    BEQ     PUSHD6
+    CMP.L   #7,D7
+    BEQ     PUSHD7
+    BRA ERROR
 
-            NOP       
+PUSHD0
+    MOVE.L  DZERO,(A1)+
+    BRA FINISH   
+PUSHD1
+    MOVE.L  DONE,(A1)+
+    BRA FINISH
+PUSHD2
+    MOVE.L  DTWO,(A1)+
+    BRA FINISH
+PUSHD3
+    MOVE.L  DTHREE,(A1)+
+    BRA FINISH
+PUSHD4
+    MOVE.L  DFOUR,(A1)+
+    BRA FINISH
+PUSHD5
+    MOVE.L  DFIVE,(A1)+
+    BRA FINISH
+PUSHD6
+    MOVE.L  DSIX,(A1)+
+    BRA FINISH
+PUSHD7
+    MOVE.L  DSEVEN,(A1)+
+    BRA FINISH
 
-ADDREG      NOP
+*ADDRESS REGISTER    
+ADDREG      
+    CMP.L   #0,D7
+    BEQ     PUSHA0
+    CMP.L   #1,D7
+    BEQ     PUSHA1
+    CMP.L   #2,D7
+    BEQ     PUSHA2
+    CMP.L   #3,D7
+    BEQ     PUSHA3
+    CMP.L   #4,D7
+    BEQ     PUSHA4
+    CMP.L   #5,D7
+    BEQ     PUSHA5
+    CMP.L   #6,D7
+    BEQ     PUSHA6
+    BRA ERROR
 
-INDIRECT    NOP
+PUSHA0
+    MOVE.L  AZERO,(A1)+
+    BRA FINISH
+PUSHA1
+    MOVE.L  AONE,(A1)+
+    BRA FINISH
+PUSHA2
+    MOVE.L  ATWO,(A1)+
+    BRA FINISH
+PUSHA3
+    MOVE.L  ATHREE,(A1)+
+    BRA FINISH
+PUSHA4
+    MOVE.L  AFOUR,(A1)+
+    BRA FINISH
+PUSHA5
+    MOVE.L  AFIVE,(A1)+
+    BRA FINISH
+PUSHA6
+    MOVE.L  ASIX,(A1)+
+    BRA FINISH   
+    
+*INDIRECT
+INDIRECT    
+    CMP.L   #0,D7
+    BEQ     PUSHI1
+    CMP.L   #1,D7
+    BEQ     PUSHI1
+    CMP.L   #2,D7
+    BEQ     PUSHI2
+    CMP.L   #3,D7
+    BEQ     PUSHI3
+    CMP.L   #4,D7
+    BEQ     PUSHI4
+    CMP.L   #5,D7
+    BEQ     PUSHI5
+    CMP.L   #6,D7
+    BEQ     PUSHI6
+    BRA ERROR
 
-DECREMENT   NOP
+PUSHI0
+    MOVE.L  IZERO,(A1)+
+    BRA FINISH    
 
-INCREMENT   NOP
+PUSHI1
+    MOVE.L  IONE,(A1)+
+    BRA FINISH
+PUSHI2
+    MOVE.L  ITWO,(A1)+
+    BRA FINISH
+PUSHI3
+    MOVE.L  ITHREE,(A1)+
+    BRA FINISH
+PUSHI4
+    MOVE.L  IFOUR,(A1)+
+    BRA FINISH
+PUSHI5
+    MOVE.L  IFIVE,(A1)+
+    BRA FINISH
+PUSHI6
+    MOVE.L  ISIX,(A1)+
+    BRA FINISH
 
-ABSOLUTE    NOP
+*POST INCREMENT    
+INCREMENT   
+    CMP.L   #0,D7
+    BEQ     PUSHPO1
+    CMP.L   #1,D7
+    BEQ     PUSHPO1
+    CMP.L   #2,D7
+    BEQ     PUSHPO2
+    CMP.L   #3,D7
+    BEQ     PUSHPO3
+    CMP.L   #4,D7
+    BEQ     PUSHPO4
+    CMP.L   #5,D7
+    BEQ     PUSHPO5
+    CMP.L   #6,D7
+    BEQ     PUSHPO6
+    BRA ERROR
+
+PUSHPO0
+    MOVE.L  POZERO,(A1)+
+    BRA FINISH     
+
+PUSHPO1
+    MOVE.L  POONE,(A1)+
+    BRA FINISH
+PUSHPO2
+    MOVE.L  POTWO,(A1)+
+    BRA FINISH
+PUSHPO3
+    MOVE.L  POTHREE,(A1)+
+    BRA FINISH
+PUSHPO4
+    MOVE.L  POFOUR,(A1)+
+    BRA FINISH
+PUSHPO5
+    MOVE.L  POFIVE,(A1)+
+    BRA FINISH
+PUSHPO6
+    MOVE.L  POSIX,(A1)+
+    BRA FINISH    
+*PRE DECREMENT
+DECREMENT        
+    CMP.L   #0,D7
+    BEQ     PUSHPRE1
+    CMP.L   #1,D7
+    BEQ     PUSHPRE1
+    CMP.L   #2,D7
+    BEQ     PUSHPRE2
+    CMP.L   #3,D7
+    BEQ     PUSHPRE3
+    CMP.L   #4,D7
+    BEQ     PUSHPRE4
+    CMP.L   #5,D7
+    BEQ     PUSHPRE5
+    CMP.L   #6,D7
+    BEQ     PUSHPRE6
+    BRA ERROR
+
+PUSHPRE0
+    MOVE.L  PREZERO,(A1)+
+    BRA FINISH
+PUSHPRE1
+    MOVE.L  PREONE,(A1)+
+    BRA FINISH 
+PUSHPRE2
+    MOVE.L  PRETWO,(A1)+
+    BRA FINISH 
+PUSHPRE3
+    MOVE.L  PRETHREE,(A1)+
+    BRA FINISH 
+PUSHPRE4
+    MOVE.L  PREFOUR,(A1)+
+    BRA FINISH 
+PUSHPRE5
+    MOVE.L  PREFIVE,(A1)+
+    BRA FINISH 
+PUSHPRE6
+    MOVE.L  PRESIX,(A1)+
+    BRA FINISH       
+    
+
+
+*For absolute, try storing address in data register, then converting all values to string
+*subtraction for letters and numbers
+*Josh may have something
+*
+ABSOLUTE
+    
+    
+    BRA ERROR
     *load corresponding registers
     
     
@@ -365,7 +567,9 @@ ABSOLUTE    NOP
 
 ERROR       NOP
 
-*REGISTER SECTION 
+
+
+FINISH    NOP 
 
 *Calculate hex equivalent of bit values
 *MODES
@@ -386,6 +590,52 @@ ERROR       NOP
 *100 --> 4 = Immediate Data
 
 
+CR      EQU     $0D         
+LF      EQU     $0A 
+
+DZERO   DC.B    'D0',0
+DONE    DC.B    'D1',0
+DTWO    DC.B    'D2',0
+DTHREE  DC.B    'D3',0  
+DFOUR   DC.B    'D4',0
+DFIVE   DC.B    'D5',0
+DSIX    DC.B    'D6',0
+DSEVEN  DC.B    'D7',0
+
+AZERO   DC.B    'A0',0
+AONE    DC.B    'A1',0
+ATWO    DC.B    'A2',0
+ATHREE  DC.B    'A3',0
+AFOUR   DC.B    'A4',0
+AFIVE   DC.B    'A5',0
+ASIX    DC.B    'A6',0
+
+IZERO   DC.B    '(A0)',0
+IONE    DC.B    '(A1)',0
+ITWO    DC.B    '(A2)',0
+ITHREE  DC.B    '(A3)',0
+IFOUR   DC.B    '(A4)',0
+IFIVE   DC.B    '(A6)',0
+ISIX    DC.B    '(A7)',0
+
+PREZERO DC.B    '-(A0)',0
+PREONE  DC.B    '-(A1)',0
+PRETWO  DC.B    '-(A2)',0
+PRETHREE DC.B   '-(A3)',0
+PREFOUR DC.B    '-(A4)',0
+PREFIVE DC.B    '-(A5)',0
+PRESIX  DC.B    '-(A6)',0
+
+POZERO  DC.B    '(A0)+',0
+POONE   DC.B    '(A1)+',0
+POTWO   DC.B    '(A2)+',0
+POTHREE DC.B    '(A3)+',0
+POFOUR  DC.B    '(A4)+',0
+POFIVE  DC.B    '(A5)+',0
+POSIX   DC.B    '(A6)+',0
+
+
+
 
 
 
@@ -397,6 +647,7 @@ ERROR       NOP
 * Put variables and constants here
 
     END    START        ; last line of source
+
 
 
 
